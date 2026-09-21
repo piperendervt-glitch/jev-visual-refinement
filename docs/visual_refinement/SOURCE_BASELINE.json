@@ -1,0 +1,32 @@
+﻿{
+    "schema":  "jev-visual-refinement-source-baseline-v1",
+    "recorded_at":  "2026-09-22T00:59:57.7509144+09:00",
+    "state":  "SC00_STATIC_BASELINE",
+    "source":  {
+                   "path":  "C:\\dev\\jev-conversation-ecology",
+                   "remote_identity":  "piperendervt-glitch/jev-conversation-ecology",
+                   "commit":  "06eff66be8d4b60504be135a7780b7e5deb5cb18",
+                   "tree":  "1f94b4d7e1a1d5ef772286efeebc7c3c65ab7727",
+                   "read_method":  "git archive of explicit paths from commit tree; no source checkout/index update",
+                   "working_tree_used":  false
+               },
+    "target":  {
+                   "path":  "C:\\dev\\jev-visual-refinement",
+                   "independent_git":  true,
+                   "baseline_commit":  "98af1d267c8bc61cfea68d7f96443b41d07d7f84",
+                   "baseline_tree":  "d8f445d1cbb239356b8ec4a7aaaf5e898a3463b5",
+                   "branch":  "sc00/independent-baseline",
+                   "remote_configured":  false,
+                   "protected_preexisting_env":  ".env (existence only; unread/unhashed/unchanged)"
+               },
+    "inputs":  {
+                   "design_sha256":  "274b7afd6bab7c3b540965fc50d613e99fc76ede8e1d36e1cf5b86a56536f99f",
+                   "chat_plan_sha256":  "c04372b68b2c24c619ad75d4048cefc9fd53e641fb47f75c06fbcd8a1ed426a4",
+                   "request_sha256":  "2f18dc6a9fc7e97a12961421e8da1ffc5adf76b624dc6ad2ba46419dd5634a02"
+               },
+    "limitations":  [
+                        "A temporary untracked .sc00-stage directory was created under the source repository during assembly; tracked files, index, refs and Git config were not modified. It was removed after emptiness and final placement were verified.",
+                        "OS edition, total RAM and disk free space were unavailable under current read permissions.",
+                        "No model load, dependency installation, media decode, GPU inference, Jev/API call, server start, GitHub operation or push was performed."
+                    ]
+}

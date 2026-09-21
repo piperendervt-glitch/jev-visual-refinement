@@ -1,0 +1,36 @@
+# SC00 引継ぎ状態
+
+- 設計: `JEV_VISUAL_REFINEMENT_DESIGN_v0_4_JA.md`（bytes SHA-256一致、本文冒頭v0.3残記あり）。
+- 対象SC: SC00 独立基盤・限定実査。
+- 新repo予定path: `C:\dev\jev-visual-refinement`。
+- branch: `sc00/independent-baseline`。
+- 元repo基点: `06eff66be8d4b60504be135a7780b7e5deb5cb18`。
+- 元tree: `1f94b4d7e1a1d5ef772286efeebc7c3c65ab7727`。
+- 独立baseline commit: `98af1d267c8bc61cfea68d7f96443b41d07d7f84`。
+- SC00最終HEADは提出応答で確定する（文書内へ循環追記しない）。
+- remote: 未設定予定。GitHub操作なし。
+- 選別コピー132 files。manifestはこれにbytes保存入力3件を加えた135記録。元`.git`、runner、実media/run/cache/model/secretsを不採用。
+- 入力正本・索引・依頼はbytesのまま `docs/visual_refinement/source/` に保存。
+- 元repoのREADME/AGENTSは `docs/source_reference/` に隔離し、現repo入口にしない。
+- 再利用候補: player/decode、有限queue、process worker、event/history、SQLite投影、正常終了、pipeline motion。
+- Jev adapterとsegmenter adapterは存在せず、新設対象。
+- 既存画像laneはQwen3-VL観測で、mask/Jev選抜ではない。
+- 環境: Windows x64、Python 3.12.10、RTX 5060 Ti 16,311MiB、driver 616.92。
+- 旧venv metadata: torch 2.9.1+cu128、torchvision 0.24.1+cu128、ultralyticsなし。
+- 既存モデルはWhisper/Qwen計約4.75GBのみ。四本のsegmenter重みなし。
+- YOLO11n/s/m-segとMask R-CNNの公式存在・基本I/Oを確認。未取得・未実行。
+- Ultralyticsのライセンス適合は未決。四本とも採用確定前。
+- Jevの公式vendor/SDK/model/endpoint/料金/保持は識別不能で未確認。
+- 新repo専用venv/model/cache/DB/runsを所有し、旧側と共有しない。
+- SC00の取得・install・動画decode・GPU・Jev・認証API・GitHub操作は全て0。
+- SC01はfixture専用。公開schema、非同期選抜、保存、revision、origin区別を実装する段階。
+- SC02前に比較task、最初のmodel、取得条件、K/座標契約を固定する。
+- SC03前に全weight revision/hash、測定profile、permit/queue/VRAM上限を固定する。
+- SC04前にJev公式仕様、5軸rubric、wire、数値検査、retry、料金・保持を承認する。
+- SC05は固定lane名、実event白ドット、queue/実行/完了/失敗/最古待機/混雑色を仕上げる。
+- スレッド追加削除UIとアーキテクチャ自由編集UIは第一版の対象外。
+- 保存期限・disk余量・品質protocolは未確認で、関係SC前に確定する。
+- JSON parse、全manifest target/hash、入力3hash、remote 0、symlink/gitlink 0を確認。
+- 保全対象 `.env` は存在確認のみで、ignore済み、tracked 0、staged 0。内容・値・hashは未読。
+- 一時 `.sc00-stage` を元repo配下へ作成した限定逸脱は `SC00_FACTS_JA.md` に明記。tracked/index/refs/Git設定の変更なし。
+- SC00最終commitとclean statusは提出応答を正とする。

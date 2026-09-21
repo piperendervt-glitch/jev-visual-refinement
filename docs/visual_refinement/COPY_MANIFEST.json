@@ -1,0 +1,1128 @@
+﻿{
+    "schema":  "jev-visual-refinement-copy-manifest-v1",
+    "generated_at":  "2026-09-22T00:59:57.7509144+09:00",
+    "source_commit":  "06eff66be8d4b60504be135a7780b7e5deb5cb18",
+    "source_tree":  "1f94b4d7e1a1d5ef772286efeebc7c3c65ab7727",
+    "baseline_commit":  "98af1d267c8bc61cfea68d7f96443b41d07d7f84",
+    "baseline_tree":  "d8f445d1cbb239356b8ec4a7aaaf5e898a3463b5",
+    "entries":  [
+                    {
+                        "action":  "adopted",
+                        "source_path":  ".gitattributes",
+                        "source_blob":  "0078f5bae467ba38daa389ed8924ce8c8e73827e",
+                        "target_path":  ".gitattributes",
+                        "target_sha256":  "1e8615537dd83e3a0b3631071e1586d8248a2e219cbd88ca92401a299df29956",
+                        "reason":  "依存・project metadata"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "config/dispatch-p1-provisional.json",
+                        "source_blob":  "41da288a089cf7e788ed10495b19b95544e3237e",
+                        "target_path":  "config/dispatch-p1-provisional.json",
+                        "target_sha256":  "c77e8790cceb706f3ea2c6461f368e1480e045043ce744015bdec7de03fb6329",
+                        "reason":  "設定候補（秘密値なし）"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "config/human_review_plan.template.json",
+                        "source_blob":  "bab22897bb37f6469a28f371b1b79f8470b52c71",
+                        "target_path":  "config/human_review_plan.template.json",
+                        "target_sha256":  "dbc1144e0a781e40d1ed5776cb9330cbcfc13d3efa100096d4b4219aacf358c2",
+                        "reason":  "設定候補（秘密値なし）"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "config/human_review_record.schema.json",
+                        "source_blob":  "740a06819906378a2c55bcb0de75ee73f82f2ede",
+                        "target_path":  "config/human_review_record.schema.json",
+                        "target_sha256":  "cae66a57cc001e5c40e6213866466cf9ed18d2c15aee50c4dceb3c2926458095",
+                        "reason":  "設定候補（秘密値なし）"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "config/manual_local.json",
+                        "source_blob":  "1e4898b16932f92741b98c613f9d9381a4a65252",
+                        "target_path":  "config/manual_local.json",
+                        "target_sha256":  "16eff0f4b68bf86b44785825ddaddfa306d8e68a1a4fbea88738a6340f556e70",
+                        "reason":  "設定候補（秘密値なし）"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "config/sv01.json",
+                        "source_blob":  "ba85f09daffc454b91eb0c99779c0038e11d0939",
+                        "target_path":  "config/sv01.json",
+                        "target_sha256":  "781a136c77a18ba200f56f0f63c964f219cbf65077a1e3a9873b8936d4b0d481",
+                        "reason":  "設定候補（秘密値なし）"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "config/sv01_f1.json",
+                        "source_blob":  "c67578cddcebc7d6abe4c241cf88b3c385afcb03",
+                        "target_path":  "config/sv01_f1.json",
+                        "target_sha256":  "0886d58b50e39fec6ebc41bec7650d524c96738ed37f459d9f08c974054c3f55",
+                        "reason":  "設定候補（秘密値なし）"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "config/sv01_long_l1.json",
+                        "source_blob":  "7b13b7202d408e9dbb4e7f148afed2bc97ed9e7b",
+                        "target_path":  "config/sv01_long_l1.json",
+                        "target_sha256":  "608628f65d44771519d7306194a10f060cf94557c53521e5679c83ab39332c17",
+                        "reason":  "設定候補（秘密値なし）"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "config/sv01_map_m1.json",
+                        "source_blob":  "ace778946acf930f9103fe9ffd51ce9c55d1e16d",
+                        "target_path":  "config/sv01_map_m1.json",
+                        "target_sha256":  "a757c013a6cba7fbfbbf6fa9dd6026c69156ee8a42e8d480cae7d295ce3bfa67",
+                        "reason":  "設定候補（秘密値なし）"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "config/sv01_resource_r1.json",
+                        "source_blob":  "78b422856eb3715eaacbd65ecc126b4b75169936",
+                        "target_path":  "config/sv01_resource_r1.json",
+                        "target_sha256":  "251ea0b615a887f7721a7cd4a708f4ac06957e518c25c3162fb789954cb22979",
+                        "reason":  "設定候補（秘密値なし）"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "config/sv01_resource_recommended.json",
+                        "source_blob":  "6778501cf669d7cf575be0ad805e4e559991c0c7",
+                        "target_path":  "config/sv01_resource_recommended.json",
+                        "target_sha256":  "279400e7299b911d2a6c1ba3265eb4e8c54a0b58a7eae1c90f7d5d35c84c3044",
+                        "reason":  "設定候補（秘密値なし）"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "config/sv01_sample_q1.json",
+                        "source_blob":  "2a51b0c45872a4bd0e43b8e7f85a16dc64dec101",
+                        "target_path":  "config/sv01_sample_q1.json",
+                        "target_sha256":  "a7520eea2f2f87a782df223e21135aaf635b0ee60259c176f5e43275bbbdb177",
+                        "reason":  "設定候補（秘密値なし）"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "docs/conversation_ecology/AV_RESOURCE_ISOLATION_AND_TUNING_REPORT_JA.md",
+                        "source_blob":  "93331b6c56056e290a036a5389e787585a2c2f50",
+                        "target_path":  "docs/conversation_ecology/AV_RESOURCE_ISOLATION_AND_TUNING_REPORT_JA.md",
+                        "target_sha256":  "ba32ed8e9ce4db7e19afac658dd96d0a169a2c9f6301efd959f83c9f815d6123",
+                        "reason":  "SC00指定の根拠報告"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "docs/conversation_ecology/DOCKED_VIDEO_AND_PROCESS_HISTORY_REPORT_JA.md",
+                        "source_blob":  "e85f20205c3bc3127ea1570b1b187d389339ec6a",
+                        "target_path":  "docs/conversation_ecology/DOCKED_VIDEO_AND_PROCESS_HISTORY_REPORT_JA.md",
+                        "target_sha256":  "693d7f82e1d8baf56012938d2e818b2128c89d5c67a5d94a7321880a6b26d14d",
+                        "reason":  "SC00指定の根拠報告"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "docs/conversation_ecology/MANUAL_LOCAL_ANALYSIS_MODE_REPORT_JA.md",
+                        "source_blob":  "23e1e5802f14bc7d166440edb0326f1c576e3441",
+                        "target_path":  "docs/conversation_ecology/MANUAL_LOCAL_ANALYSIS_MODE_REPORT_JA.md",
+                        "target_sha256":  "33fd718270c65aa20ae4fa549c94ef9b010691afd6c1820fa4cc97dd6ee0f9cd",
+                        "reason":  "SC00指定の根拠報告"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "AGENTS.md",
+                        "source_blob":  "a93fc863c41149d057dab9d21b1da619bf4cd96f",
+                        "target_path":  "docs/source_reference/AGENTS_SOURCE.md",
+                        "target_sha256":  "d7bcd90f53d31eb9f84f8bda7bc452eb683ef1ce048597b8373d91fe6533b8f7",
+                        "reason":  "旧入口を参照名で隔離"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "README.md",
+                        "source_blob":  "4b944151175fe18c8e72d3b5cccce16796d48af2",
+                        "target_path":  "docs/source_reference/README_SOURCE.md",
+                        "target_sha256":  "b4fe3332fab5d3a1b83a3cc897b367b65bab8380ec308c5734ad42669eaf7e7d",
+                        "reason":  "旧入口を参照名で隔離"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "fixtures/conversation_ecology/cases.json",
+                        "source_blob":  "5208b410adb8b1dc9e6ebef6f66b6fd318aaa18c",
+                        "target_path":  "fixtures/conversation_ecology/cases.json",
+                        "target_sha256":  "d10a331360147dfc764529fdbca9a8480d9919b8279e58f5e9cb1b5428d8b644",
+                        "reason":  "非機微の合成fixture"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "fixtures/conversation_ecology/context_hearing.json",
+                        "source_blob":  "e3e9f7fc0a9bb1a1411a59a99537287ad5a00c9e",
+                        "target_path":  "fixtures/conversation_ecology/context_hearing.json",
+                        "target_sha256":  "e9b14e0da2891c8f5c76c0e9cd58298d6fc574123164236bb9bd3d666dce50e5",
+                        "reason":  "非機微の合成fixture"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "pyproject.toml",
+                        "source_blob":  "c498d0a6c23bc6683c9dca179c94a099bf230cbc",
+                        "target_path":  "pyproject.toml",
+                        "target_sha256":  "26014d08e9d8314e3560d03d7885d64179c5ff5ee1a1de7e2403a2e52e3cc943",
+                        "reason":  "依存・project metadata"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "requirements-local.lock.txt",
+                        "source_blob":  "451185ce942d1c44fd433aaaa4485728dc4c77d1",
+                        "target_path":  "requirements-local.lock.txt",
+                        "target_sha256":  "532ba70ba6ec7a8f036941184cd5d6d5761f56e4f92f8d3a6c416beb951fcdb8",
+                        "reason":  "依存・project metadata"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "requirements-local.txt",
+                        "source_blob":  "54f471aa01113c5e85c8b2d81e68e2cbacf0ea1d",
+                        "target_path":  "requirements-local.txt",
+                        "target_sha256":  "cb083a32912e68c7157f7d9fbd96378aa82ef9b8727d0e0321eb6c4c3f222dc6",
+                        "reason":  "依存・project metadata"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/__init__.py",
+                        "source_blob":  "8db3d5abde58e69df6c26041f87fd69904f14e92",
+                        "target_path":  "src/conversation_ecology/__init__.py",
+                        "target_sha256":  "e0b490aced468a938478b0a5e75ec6f2c13120b3ebb1680cc1747bb7f31fb3d9",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/context/__init__.py",
+                        "source_blob":  "8d8bfd43668fdf95d58357f4c0cc46a8522c3171",
+                        "target_path":  "src/conversation_ecology/context/__init__.py",
+                        "target_sha256":  "3d353d33bac2c0df4abfb02007106641272c86a4a4fc655c874a7b7c0dde7709",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/context/boundary.py",
+                        "source_blob":  "2ca6997c9834b0da4875ca55be3e24be8497b780",
+                        "target_path":  "src/conversation_ecology/context/boundary.py",
+                        "target_sha256":  "2efda2804291c41ca62f18c73cc0e7729d7d250b8ad1d6fb00932cfbee74f45a",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/context/commits.py",
+                        "source_blob":  "33e0e1ab8ef186ca50f50973d4fbb07e24bac744",
+                        "target_path":  "src/conversation_ecology/context/commits.py",
+                        "target_sha256":  "e21150b7a7a2c6ee267d7d45c24e3d8ae460697b0a64c0225c37d772b4587f77",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/context/dependencies.py",
+                        "source_blob":  "9a9a81da9e03eb6e9d97c35336488cfe66e3d3d6",
+                        "target_path":  "src/conversation_ecology/context/dependencies.py",
+                        "target_sha256":  "18de88e459438d4f95239c1d2e5be8d9af460936725e48126ae12a150ba6d188",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/context/field_adapter.py",
+                        "source_blob":  "6cd8c82972d721c3f1a5937dab8f56e520439ec4",
+                        "target_path":  "src/conversation_ecology/context/field_adapter.py",
+                        "target_sha256":  "7ac4b62a3b047536ccf159ecb70aa29083621b3f3c9f516e719c4e07d4a637d5",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/context/model.py",
+                        "source_blob":  "7e8eabed14dcbced9335d77be1161eeb7600d380",
+                        "target_path":  "src/conversation_ecology/context/model.py",
+                        "target_sha256":  "39be7139f7e0720a8931f7535ac424a077acbb2b50d6d72268bdd38058964d30",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/context/observations.py",
+                        "source_blob":  "c34d9975fe0cdbf57e86fed3b52a2513a546d8f8",
+                        "target_path":  "src/conversation_ecology/context/observations.py",
+                        "target_sha256":  "c6e35ae2b8ddb70b4db33f8ba00bc443302850800cc00a034e19f8a8082c54e1",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/context/output_adapter.py",
+                        "source_blob":  "9263ce324f8d7cfcbe7acfe59c0c32e62f324ab8",
+                        "target_path":  "src/conversation_ecology/context/output_adapter.py",
+                        "target_sha256":  "27d3bd3a73b305282a442af83c29d3c1d13cb1087f7c4e622cc83be17f8925b7",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/context/provider.py",
+                        "source_blob":  "33201db72a0c9cb8852bc34a66fd09e564f87fb6",
+                        "target_path":  "src/conversation_ecology/context/provider.py",
+                        "target_sha256":  "d67b7dd19f6e74f31d7f826232a508f85df4c06b763666c5e13c3140b37ffdaf",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/context/retention.py",
+                        "source_blob":  "59ccc7f8bb3160ff5d7781c5392c1b1c0baa41e3",
+                        "target_path":  "src/conversation_ecology/context/retention.py",
+                        "target_sha256":  "664630a540fd0eb46cf2285add73b68770ff9f6ac35c75ffd632c96bb9b500e9",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/context/store.py",
+                        "source_blob":  "d0d54f422b48f2c48965d53beea66b6cbe717a54",
+                        "target_path":  "src/conversation_ecology/context/store.py",
+                        "target_sha256":  "757f649a695c94493cf822b87fa47db7d756a0a7f6c69f5267fe86b525657dea",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/contracts.py",
+                        "source_blob":  "9458e03b015c687effa89f46e8a8a51520ad3f47",
+                        "target_path":  "src/conversation_ecology/contracts.py",
+                        "target_sha256":  "a9562f86529f80ee756a3889041fff61d40c0e45e6bc339d4df1e7e9f369c22a",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/demo.py",
+                        "source_blob":  "f318488f7dc7910764ed3f084e20d9601a73b2ff",
+                        "target_path":  "src/conversation_ecology/demo.py",
+                        "target_sha256":  "8c4633062d23e86fe959f1c4d7c16130fd10596513d9442d66aeb7369d8e2e12",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/engine.py",
+                        "source_blob":  "1fa9f6c09d803d10534c5052f72779ade273c1ab",
+                        "target_path":  "src/conversation_ecology/engine.py",
+                        "target_sha256":  "bc180f1b78e879c2594fa5bdb1ea8abc3359a9d0b011928caa23d666f922bf9b",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/evaluation.py",
+                        "source_blob":  "7d6516a5dec38f58a1f1ff99b04f775477c2c3d6",
+                        "target_path":  "src/conversation_ecology/evaluation.py",
+                        "target_sha256":  "3e8f00b054812565ea2017757c23b63c95e18da2328620e9b8679fe1ab79838e",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/events.py",
+                        "source_blob":  "a3eaf55cb2631a2a837b684058b264c94d2daeba",
+                        "target_path":  "src/conversation_ecology/events.py",
+                        "target_sha256":  "111e4561fb5aba7451055c9795c7d28629d8f3c58bd73855a5a8f176a2e1f35a",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/hearing/__init__.py",
+                        "source_blob":  "dbef3e0e5a46574606c300b4e0224d889f3ae01b",
+                        "target_path":  "src/conversation_ecology/hearing/__init__.py",
+                        "target_sha256":  "5127e80624d1eb6f0d3e7f8b159b5b2f0a98189567ae08ddac0a4ff74719ac19",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/hearing/accounting.py",
+                        "source_blob":  "c1edeb3ab024cfa370ec86814c3bea8951784065",
+                        "target_path":  "src/conversation_ecology/hearing/accounting.py",
+                        "target_sha256":  "8221cf80af60e7f4a3e4f89d7e49d7653955a639c6b5fb66d325d5a4657dd5b1",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/hearing/coordinator.py",
+                        "source_blob":  "4db52eb74daee5943058403594ea454a0d01a539",
+                        "target_path":  "src/conversation_ecology/hearing/coordinator.py",
+                        "target_sha256":  "b42638f6dfc6bb7307b20d9c1181b4d7c193b38cf7fc31eb48c2dde2afc06ee7",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/hearing/evaluation.py",
+                        "source_blob":  "db3aca590a3c14aa8e29e18b98ec9a9bd191cdf6",
+                        "target_path":  "src/conversation_ecology/hearing/evaluation.py",
+                        "target_sha256":  "19274db3d08a84b3cc767d27e7d74838a390a94186c3e248504486db79e751c1",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/isolation.py",
+                        "source_blob":  "41bdc74eeb1d96edfc03425ae22eb70197345679",
+                        "target_path":  "src/conversation_ecology/isolation.py",
+                        "target_sha256":  "fca42ecf1ff6d4bc5653aca1b57bfce03851924edc4e613ea02841db6c998c1a",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/lifecycle.py",
+                        "source_blob":  "0574d845c82db653d1f745f5452f4a83377ea0bb",
+                        "target_path":  "src/conversation_ecology/lifecycle.py",
+                        "target_sha256":  "f132f55913f672ab4efcbee7726e4603f8d14e4e25f0a2fa54b026518ccb5124",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/map_projection.py",
+                        "source_blob":  "7886102706c7103c5a07694bc03d0af69904c073",
+                        "target_path":  "src/conversation_ecology/map_projection.py",
+                        "target_sha256":  "802b2f8165813b91b45be41f4708d0c3c8022b4bc000320bdac021d36c349672",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/map_server.py",
+                        "source_blob":  "f633f5e52281d306c212235bc4461e3bf4c4272c",
+                        "target_path":  "src/conversation_ecology/map_server.py",
+                        "target_sha256":  "ecce067eb7cc44f38b5be7e8f7c28704920c00a0f1ecb85d2cac903d330b0ab2",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/mass_fixture.py",
+                        "source_blob":  "9b7802c9107bf8ee15efc707987c3297ccac247b",
+                        "target_path":  "src/conversation_ecology/mass_fixture.py",
+                        "target_sha256":  "466904efe737ba578c28982abe49138229a0b95ebcb28548a9d46fcec2f06f6f",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/mass_projection.py",
+                        "source_blob":  "b1a18e1d06ef1344b6f5fe39fd9ce818d761b2d3",
+                        "target_path":  "src/conversation_ecology/mass_projection.py",
+                        "target_sha256":  "6b9361bccdbf5cfcc30ce31443a42cc43635f85721a8b2ba1f62a107b050ff71",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/pipeline_projection.py",
+                        "source_blob":  "d320af72ddfc10ede5b9538fcc1a699b77fa7071",
+                        "target_path":  "src/conversation_ecology/pipeline_projection.py",
+                        "target_sha256":  "fe5ed276e9d6b6cc65e5fb5dbad71d61fcca58afaedda5ff44620ef5bddca862",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/player_template.py",
+                        "source_blob":  "808845ba13c0d2cafc479e05a4a6ec2f92002a0d",
+                        "target_path":  "src/conversation_ecology/player_template.py",
+                        "target_sha256":  "6bec7f19b901a2e8c8da4b6ec15a3d8428e6d3e6c2e6f91e7ebde5b6ee0bd25c",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/__init__.py",
+                        "source_blob":  "97111f27a657a6ff86787e05b9b3b958e24927e8",
+                        "target_path":  "src/conversation_ecology/saved_video/__init__.py",
+                        "target_sha256":  "452b61923e7baa888f0fc11cfff77f8fbe36a90c17e0902af90d77c73df7b2d8",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/budget.py",
+                        "source_blob":  "6a469bb1e68e0a17bc0c6841866bcaf95ec6f69d",
+                        "target_path":  "src/conversation_ecology/saved_video/budget.py",
+                        "target_sha256":  "b9047bbc8a1ef825790636f115c80593ce81cbac5034e7c7d8e0cdf31aa3304a",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/controller.py",
+                        "source_blob":  "2a07da9f4dc42265119640177b087e0fec00e652",
+                        "target_path":  "src/conversation_ecology/saved_video/controller.py",
+                        "target_sha256":  "8a99009915a0f27cdcc6bb287adb915d427d72e890cc05c521901d69f794b23b",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/grants.py",
+                        "source_blob":  "43d206c70e530974f8f27ff7d367b5037c4e2c0e",
+                        "target_path":  "src/conversation_ecology/saved_video/grants.py",
+                        "target_sha256":  "678213981803182ff3178c47e274e427958d20cc199643849bd7f5fee06d7300",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/history.py",
+                        "source_blob":  "e573c705e85535caf735a26b0a6e74de0fab9d09",
+                        "target_path":  "src/conversation_ecology/saved_video/history.py",
+                        "target_sha256":  "037553f525a12777aeda505f4fa7a89b9433659e302327a3fb336d1b2d26efb6",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/manual.py",
+                        "source_blob":  "28de0cca4340087b9c230e276e43727d7c3d43b0",
+                        "target_path":  "src/conversation_ecology/saved_video/manual.py",
+                        "target_sha256":  "58ac40c9efce4a6df0b78497678ea7ee2d0b3d7175ca8575351a096eec3152ad",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/manual_ownership.py",
+                        "source_blob":  "c43e61228ddb65ee3f392ae9dc65ebc44da9539c",
+                        "target_path":  "src/conversation_ecology/saved_video/manual_ownership.py",
+                        "target_sha256":  "a9211670dfffef456ff80eb3ccc167d644637a88af715bf763a121945474ce2b",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/manual_server.py",
+                        "source_blob":  "cf71045082fdf4b715cc4bc66cf897b3d61c1c28",
+                        "target_path":  "src/conversation_ecology/saved_video/manual_server.py",
+                        "target_sha256":  "2c5fa2bce783ecd14b653121bd0f5fd42898df18bf28bfe887f27919006dd7f0",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/map_bridge.py",
+                        "source_blob":  "e5fe3dff4e758948990338819d4d18238256aaa5",
+                        "target_path":  "src/conversation_ecology/saved_video/map_bridge.py",
+                        "target_sha256":  "bcfcec28528cde5cfe2f5d3650c9a244dc0578ede1c790d4a4aeef62a6150192",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/media.py",
+                        "source_blob":  "abc36edbbd9e94a4e76cab14c10d206ace83ed03",
+                        "target_path":  "src/conversation_ecology/saved_video/media.py",
+                        "target_sha256":  "f061272be50e39384458a7998e717e65d85bca97f89597aa847d1397810970b7",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/models.py",
+                        "source_blob":  "beb7efb62dce122ae3b34d21fecf81bb78cc9fe7",
+                        "target_path":  "src/conversation_ecology/saved_video/models.py",
+                        "target_sha256":  "c5f923175d7e91e809b538d131816a062302a69b69aa8ff6d3a49879f9cc9bee",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/resource_budget.py",
+                        "source_blob":  "efc62572a6c13e726523ffad84264b3e033570f8",
+                        "target_path":  "src/conversation_ecology/saved_video/resource_budget.py",
+                        "target_sha256":  "62495d4df22be0f252bf8d73e365155f15a7bcce4b9860cbb70fb550d8cc476b",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/resource_controller.py",
+                        "source_blob":  "298546aa8e06ee08680a6a4eb8999adb478bb88e",
+                        "target_path":  "src/conversation_ecology/saved_video/resource_controller.py",
+                        "target_sha256":  "605d0fba772c25776cbaca65c3fa96e89e534e5c6ad7454b5ddc71e116b9db77",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/resource_metrics.py",
+                        "source_blob":  "9e678832384a0edfd421e6d5d868395d0c002a41",
+                        "target_path":  "src/conversation_ecology/saved_video/resource_metrics.py",
+                        "target_sha256":  "cf9e2a38b36cb5a455ef4175baf035a41c7c4583076dca39004777a67d4f412f",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/resource_process.py",
+                        "source_blob":  "e4f0121fa7b90cc71b9f66a0ec5096c4e0972708",
+                        "target_path":  "src/conversation_ecology/saved_video/resource_process.py",
+                        "target_sha256":  "7adf1e47fc063313d8707c65428ad19aa0d0879eed72e92d14403765b93b7dca",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/resource_worker.py",
+                        "source_blob":  "be52b350952008c09cfa0f02c0b244b2a4b6825e",
+                        "target_path":  "src/conversation_ecology/saved_video/resource_worker.py",
+                        "target_sha256":  "831b481f1c6f3e94397c580b528d4bc724ca9747c303ae26c411844cfb7595ad",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/runtime.py",
+                        "source_blob":  "0468b7dd26f122daf966b80a8fe8fe3888754884",
+                        "target_path":  "src/conversation_ecology/saved_video/runtime.py",
+                        "target_sha256":  "6a6905ffd54de39d5507e88a111b0fd2c733bb99963a9db5ea2020f36317d4e2",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/saved_video/server.py",
+                        "source_blob":  "18b05d7895f0edcb799305c78b1def14eb856649",
+                        "target_path":  "src/conversation_ecology/saved_video/server.py",
+                        "target_sha256":  "7fe4dab8e79a9a3a5e11acf6fe841a2aa528dfa3dc2c13fe7bce598dec3a674c",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/server.py",
+                        "source_blob":  "625f08394d6fd92cb7865c3b165cc41bc32511ec",
+                        "target_path":  "src/conversation_ecology/server.py",
+                        "target_sha256":  "8b763bae3e241e6cae995e55bd9dd15e6e82babfdc1b5d2bd2723f9337954faf",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "src/conversation_ecology/templates.py",
+                        "source_blob":  "2fed6c52396fa79b069ff687ec931c1344074048",
+                        "target_path":  "src/conversation_ecology/templates.py",
+                        "target_sha256":  "b81b72c0ebd6e83c15e3b0d095c186640ce87bc9211554ec83a378d4c9f56817",
+                        "reason":  "再利用候補の通常ソース"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_c0.py",
+                        "source_blob":  "dee4636122528f8a463b9908c0a2e13aa2c64a06",
+                        "target_path":  "tests/conversation_ecology/test_c0.py",
+                        "target_sha256":  "ae8766602ad06aa81dd68ed20ac6c16dd18d22cecf01590387d631c025434658",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_context.py",
+                        "source_blob":  "15406bbb31913043e674c9cacdd438b13c15a334",
+                        "target_path":  "tests/conversation_ecology/test_context.py",
+                        "target_sha256":  "9dff234b3bdcd5517ab81ddec06354b4027118c3deb39130de63d6a94f18b369",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_context_fields.py",
+                        "source_blob":  "08e33e3a305ff0dbf5ea6c7f9e32abdeec5762ae",
+                        "target_path":  "tests/conversation_ecology/test_context_fields.py",
+                        "target_sha256":  "c2ebbb2a674e3ee44ac376065851fd858715765e61d32fd1d17a683c3f43ec94",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_context_http.py",
+                        "source_blob":  "860604dda6cc47f81b75137267235126c28f5d16",
+                        "target_path":  "tests/conversation_ecology/test_context_http.py",
+                        "target_sha256":  "b6bb77c538ae7f12ec89ecaab1540ce4ac36105860b6ce802063a196eb889cb7",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_context_limits.py",
+                        "source_blob":  "7d6f0accbd032ccbb83902b034cadfa854ec3c24",
+                        "target_path":  "tests/conversation_ecology/test_context_limits.py",
+                        "target_sha256":  "f491a1ba4d31a0b9c38108c34d8ee93c04595ef2d1daf656e5a2e32a9016438d",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_dynamic_map.py",
+                        "source_blob":  "55be04fa11d8b5a0b70ff78f73e9d22abf6d98d4",
+                        "target_path":  "tests/conversation_ecology/test_dynamic_map.py",
+                        "target_sha256":  "ac3cda75d12ef64b43afcc25b3a554820ed222a1bcd66b4df59342102ee83ce4",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_field_mass.py",
+                        "source_blob":  "94ce19baacca005e88eff6747f7475037b71a67b",
+                        "target_path":  "tests/conversation_ecology/test_field_mass.py",
+                        "target_sha256":  "a2a8cf649fd770779d02b90e9c4c9ae2c5fabf5b7fecdd56ca64590000bab776",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_manual_launcher.py",
+                        "source_blob":  "ea82ea0411a084d742dbd1016e6be2e5b4f3182d",
+                        "target_path":  "tests/conversation_ecology/test_manual_launcher.py",
+                        "target_sha256":  "e4c37f917a10ac8ec0d05c4d33c68fe9a221be3968f0bad8e1f0b6cb2cf13534",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_manual_local.py",
+                        "source_blob":  "d5a7f36e428311fd366ff49ed64530a9ffeff706",
+                        "target_path":  "tests/conversation_ecology/test_manual_local.py",
+                        "target_sha256":  "5b761401f140292b3cb26487fe1f114ec67b5026a20921a7fb10246e84ae90af",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_map_saved_video.py",
+                        "source_blob":  "74df4513973f8644167697fc22aa40f754ef824f",
+                        "target_path":  "tests/conversation_ecology/test_map_saved_video.py",
+                        "target_sha256":  "d1c06b53b1290df9c49ac65823e1047edd588dc71a3e9f99416ab8468e789404",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_pipeline.py",
+                        "source_blob":  "1aed57baab2458b1e095a97e92024e5875d1e41d",
+                        "target_path":  "tests/conversation_ecology/test_pipeline.py",
+                        "target_sha256":  "61490a69d021631189baae94be2abcb28bd78939eefc759c24682de94d229647",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_pipeline_decode.py",
+                        "source_blob":  "3fb3d30b4970111313424ccae812ce0d8e76f2f1",
+                        "target_path":  "tests/conversation_ecology/test_pipeline_decode.py",
+                        "target_sha256":  "08c150070efd6a36e7b5f9b2fd05eec16e994ccc56dce0170c53dea5dc05ebf7",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_process_history.py",
+                        "source_blob":  "7c0ee1c2dc01cd06cd4bda7342c05e6940477891",
+                        "target_path":  "tests/conversation_ecology/test_process_history.py",
+                        "target_sha256":  "038a67c57b0e8593fb55b2ba03f1a01a6c2c9b28f7a53117124723858e5439e9",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_resend_ack.py",
+                        "source_blob":  "b00a9bfb9abb4d512172c2fb73b8367c9259d357",
+                        "target_path":  "tests/conversation_ecology/test_resend_ack.py",
+                        "target_sha256":  "4083a01cd3720ada5933755ef47cbb32d32747a0b16b1495c34267b5a55457c6",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_resource_isolation.py",
+                        "source_blob":  "9961900b62e37a347f965ab85f0d8488a2b962d1",
+                        "target_path":  "tests/conversation_ecology/test_resource_isolation.py",
+                        "target_sha256":  "db4954013206186322f3aef22fd18ffa0d3e1387d7813913ac620bc75c12792a",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_saved_video.py",
+                        "source_blob":  "8c5af47a69c8c81530b0008cf559e9284c5d99a1",
+                        "target_path":  "tests/conversation_ecology/test_saved_video.py",
+                        "target_sha256":  "b565284c555dcf4379f33f41d59fcfa5ea66d775e390188f53f3e1de64034abb",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_saved_video_decode.py",
+                        "source_blob":  "bedb474be453909f75be3e280a4fa08e16c2e18c",
+                        "target_path":  "tests/conversation_ecology/test_saved_video_decode.py",
+                        "target_sha256":  "ae1e405765b07d94f3fa5bb134f5417c3f27f1ae0f8c6d628b61a6b44fb550d2",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_saved_video_f1.py",
+                        "source_blob":  "f3eaec1ed379774184562db9cc44baecc574c2bf",
+                        "target_path":  "tests/conversation_ecology/test_saved_video_f1.py",
+                        "target_sha256":  "3d2f601bcb096a8a0b3bf565f8a0e73010ab2453a26df71eea181cf01361856e",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_saved_video_http.py",
+                        "source_blob":  "4df805a927b7b34bd1a74a59a3a23650f3abec74",
+                        "target_path":  "tests/conversation_ecology/test_saved_video_http.py",
+                        "target_sha256":  "0e6cd09a226e38dc53faf7f697ee7a46dd507740e143a0286d57e16eafd8f9c7",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_saved_video_long.py",
+                        "source_blob":  "b1f2f6e77a1cacf2c36cfb1eaa0c7bbf27798ba7",
+                        "target_path":  "tests/conversation_ecology/test_saved_video_long.py",
+                        "target_sha256":  "7a4f1f29a0b3722f97ab0e8f928099b22b5b415a57a563be1e6c0c42ba324935",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_saved_video_q1.py",
+                        "source_blob":  "de5f7ac3ebbd3992a1e022f06077fd1fe2f4f2fb",
+                        "target_path":  "tests/conversation_ecology/test_saved_video_q1.py",
+                        "target_sha256":  "742baed91859af1c318ef42ef22d2c4485d2e4c1c337b2e72de4a5b376749d1e",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/test_shutdown.py",
+                        "source_blob":  "b2da1a3552d164faf5b34f78c06970880b83187a",
+                        "target_path":  "tests/conversation_ecology/test_shutdown.py",
+                        "target_sha256":  "5f4045f57c416c0ccdb0030af05325fab2398f570141b0d5f2f84b82821e1747",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/ui_dynamic_map.test.cjs",
+                        "source_blob":  "7fd5f0d513aaecd669c01d3f8c28b135b221426d",
+                        "target_path":  "tests/conversation_ecology/ui_dynamic_map.test.cjs",
+                        "target_sha256":  "335f6e87d5286213273e18955bb68f9230695618eda50cd2e5a6a32e3cfb84a5",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/ui_field_mass.test.cjs",
+                        "source_blob":  "d9ca29ce7363f82daf2f0a2aea75aa0068fd9736",
+                        "target_path":  "tests/conversation_ecology/ui_field_mass.test.cjs",
+                        "target_sha256":  "2a56aeba37874af8b666aeb9ae10ea195ce5f8fd3b2f9a22cc51a297fd631350",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/ui_graph_2d.test.cjs",
+                        "source_blob":  "0de5a57c5b1145e8e7b3d644024043555686f2fa",
+                        "target_path":  "tests/conversation_ecology/ui_graph_2d.test.cjs",
+                        "target_sha256":  "10790ff7b3c38ee8ac1529db3b7cbcc7cbe36fd42a380daefb4cd254aa08ea01",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/ui_map.test.cjs",
+                        "source_blob":  "a64f9d83c0840c9235330c7f0a06194ee99ec335",
+                        "target_path":  "tests/conversation_ecology/ui_map.test.cjs",
+                        "target_sha256":  "05dd2d78a289ca612ff7090d6d2f8ac8c155b3e8870cdf25d2ee0b09934eaa52",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/ui_map_lifecycle.test.cjs",
+                        "source_blob":  "bfd30f7435f9215f74f73ab44da4b0df632d068f",
+                        "target_path":  "tests/conversation_ecology/ui_map_lifecycle.test.cjs",
+                        "target_sha256":  "68372c10011473532f4788cd248c4ecf10c0ce895dda0bcf5b361e565902829c",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/ui_pipeline.test.cjs",
+                        "source_blob":  "ab46e0296a07689ad61f9054137aae892abe6ec1",
+                        "target_path":  "tests/conversation_ecology/ui_pipeline.test.cjs",
+                        "target_sha256":  "fbfafcdf61b1221e96771f180bc7ebf94e2da2ac0f67bd72738ebe2a688cf070",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/ui_pipeline_view.test.cjs",
+                        "source_blob":  "5bf260a069074b134060a59f9ca79e975641cf91",
+                        "target_path":  "tests/conversation_ecology/ui_pipeline_view.test.cjs",
+                        "target_sha256":  "2903567ab8f3a5ab5b7b745c6ed735d2d05f4fe11e29749420fead5c6c14a466",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/ui_process_history.test.cjs",
+                        "source_blob":  "d5779bc241f86470ef80a5bf3bd0a571b4809475",
+                        "target_path":  "tests/conversation_ecology/ui_process_history.test.cjs",
+                        "target_sha256":  "5e69ade7d9933555e0af0282d49622bfad41a93ddd3070f18ed0308e569a7254",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/ui_resend_ack.test.cjs",
+                        "source_blob":  "b3e442b89d358b8ce17611da28c09cceb1a570d6",
+                        "target_path":  "tests/conversation_ecology/ui_resend_ack.test.cjs",
+                        "target_sha256":  "603b80641520e83cb4400b2a43bc280ca0c51b6c5b53a3e9e47441168ef8297f",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "tests/conversation_ecology/ui_saved_video.test.cjs",
+                        "source_blob":  "9b933911079a40d2cfec2e7d8df588bb97969ad3",
+                        "target_path":  "tests/conversation_ecology/ui_saved_video.test.cjs",
+                        "target_sha256":  "f3fd3dddb9092e313ab5673c123c11300d1dcc16cb381292a97b5ed99e2e83f0",
+                        "reason":  "関連する専用・合成試験"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/app.js",
+                        "source_blob":  "95fe43c9ebe3adf40473719ba32572b5281b342c",
+                        "target_path":  "ui/conversation_ecology/app.js",
+                        "target_sha256":  "365e154cfff4f4bda69a58a72f3309524bba8fb729d1704e7bfe0b8deae71d5c",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/index.html",
+                        "source_blob":  "c70a1e5097a19a99ddd3e0fb5e122f160c2b899d",
+                        "target_path":  "ui/conversation_ecology/index.html",
+                        "target_sha256":  "c624e31254699f5037236bf6fc2d0ed3455537573cddfe0a25756dc2655639b3",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/map-camera.js",
+                        "source_blob":  "ea71d1db711a160bad26d422a9fb8425fb65725c",
+                        "target_path":  "ui/conversation_ecology/map-camera.js",
+                        "target_sha256":  "9b9e821a3acf7a013b2e73c1174212be6eca72a12cafd0054627d69198874fd6",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/map-layout-check.css",
+                        "source_blob":  "082d97eda4c36ddc0ecc5830fe69aae82966654b",
+                        "target_path":  "ui/conversation_ecology/map-layout-check.css",
+                        "target_sha256":  "9b9121d04d9c6de448f6d2d502f062ad5640cb7b56c9e15360c01d8ea7965de7",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/map-layout-check.html",
+                        "source_blob":  "01e627ae480ac01b2a3551b409177cb56310afc7",
+                        "target_path":  "ui/conversation_ecology/map-layout-check.html",
+                        "target_sha256":  "901fb00978fd6a12092ffb6f6adab7dc8d6e69725815bfd302e608ea5a6ad699",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/map-layout-check.js",
+                        "source_blob":  "279df57ca7dfa63419a571747e3c6e74e6e3b33f",
+                        "target_path":  "ui/conversation_ecology/map-layout-check.js",
+                        "target_sha256":  "da28c7ea98cfc3fcb5e131a69ba6f25827900df195c0989b192192f4970acf54",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/map-layout.js",
+                        "source_blob":  "e7b57bc17770f91ae1cd88b120b4477172d53387",
+                        "target_path":  "ui/conversation_ecology/map-layout.js",
+                        "target_sha256":  "bb9a7e8a4cf9ab70fa6c8f8cc745273b8bc39e25b9e3d86611ae67ce34ee295f",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/map-mass.js",
+                        "source_blob":  "53fcfd6e669c06ac4f608d0f9a5c0ed027ffb594",
+                        "target_path":  "ui/conversation_ecology/map-mass.js",
+                        "target_sha256":  "6e2f20daae3c3ac46763923a4864b487f71e82bca2fe80f5aaab8ef5979b8500",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/map-renderer.js",
+                        "source_blob":  "89887cd4b14965032a470ce42b8095ae5532da5b",
+                        "target_path":  "ui/conversation_ecology/map-renderer.js",
+                        "target_sha256":  "fc31638697ea4aa8f61bb8a19e35979221378bcd4990ab496b10bcbb8ce94571",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/map-state.js",
+                        "source_blob":  "5af9d0418e350105ac373cbe4a021056dc9865d7",
+                        "target_path":  "ui/conversation_ecology/map-state.js",
+                        "target_sha256":  "170c30896f48423107381bed5c2178139db7344c8fd538eb8bc3aae1e7120440",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/map.css",
+                        "source_blob":  "bfaca3fb1543f6efeee2b6ec5f1fbfe24c3d4ca5",
+                        "target_path":  "ui/conversation_ecology/map.css",
+                        "target_sha256":  "c2e9b925a7fc24afba1f4057004160153caaeaaa235a23e540112886e759175a",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/map.html",
+                        "source_blob":  "168d4c2e3dee50385c18d642357d4eb123ea20c1",
+                        "target_path":  "ui/conversation_ecology/map.html",
+                        "target_sha256":  "7614bab319156538c14f3c691e5e214981719eba2ddf8b77dfd4d8a5c1551952",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/map.js",
+                        "source_blob":  "3e2bd48fd6fe01e0cdee51bdae88458ce95ec20f",
+                        "target_path":  "ui/conversation_ecology/map.js",
+                        "target_sha256":  "43a0d7a5971f7ca45588249be33d84244eb1190483ef325161ca69500f33e13d",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/pipeline-view.js",
+                        "source_blob":  "b73c1984a1b0bb24741b03adf175805b906dd145",
+                        "target_path":  "ui/conversation_ecology/pipeline-view.js",
+                        "target_sha256":  "8af06f8e0188852b00d7d911a2d4334d6ca30adf452a1bb3742c9cb06d0f7c14",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/pipeline.css",
+                        "source_blob":  "52ad26f1b0ae0fbb8c111a9e37573a49b12418ca",
+                        "target_path":  "ui/conversation_ecology/pipeline.css",
+                        "target_sha256":  "3838fc4a2c3d07eabe4d5d1cef1e65bd862f19752af5e3b0873bdf56d8f20171",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/pipeline.js",
+                        "source_blob":  "e12ded8f7e5ac8f4f67323353dcafaff05c34247",
+                        "target_path":  "ui/conversation_ecology/pipeline.js",
+                        "target_sha256":  "1889c1eb5ef6f99a8bc45ff5c63b6ddfa104398fb98ac178b0047088406fb8a0",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/process-history.js",
+                        "source_blob":  "068a1f9255f5028d2fa350d52c5479cccf857c8e",
+                        "target_path":  "ui/conversation_ecology/process-history.js",
+                        "target_sha256":  "a1610cd2510b98e8e3c758ca97f7e94ff2c01ccf60f7895c4a719a574eff288d",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/saved-video.css",
+                        "source_blob":  "47b3e52c31a6386e9ca799deac35cb8c15fbad67",
+                        "target_path":  "ui/conversation_ecology/saved-video.css",
+                        "target_sha256":  "e1926a41671b77e0cd743cd08263c59defacd4b4ceeeb180e22ab766ff230e75",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/saved-video.html",
+                        "source_blob":  "04abe103d9613a5b393250fbd82801b76de4479c",
+                        "target_path":  "ui/conversation_ecology/saved-video.html",
+                        "target_sha256":  "2e0ae63a202a2c91a460a2cc16807ecf1f833767e8fcb44f90be15511f00d971",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/saved-video.js",
+                        "source_blob":  "54d48878b80d52d388fd815b7707b35df6c443bf",
+                        "target_path":  "ui/conversation_ecology/saved-video.js",
+                        "target_sha256":  "c917ee66cedfb0f1ff450911ae6557a8decf9c61d9d47f1c18f74b3e00125a62",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "ui/conversation_ecology/style.css",
+                        "source_blob":  "5a4dcdbe053ef1c897f5f385623746486d15401a",
+                        "target_path":  "ui/conversation_ecology/style.css",
+                        "target_sha256":  "81fc5354d3d8b59030d12fba552f4bebcec166e3bcd66b5a97144428ab994187",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "web/activity-view.js",
+                        "source_blob":  "8f0c147abe05b260c7e5e304b5c195811830515a",
+                        "target_path":  "web/activity-view.js",
+                        "target_sha256":  "7388e70df948452a8035cf2be580bfa1232b1c342d23f47653725da0b5b6ca4b",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "web/activity.css",
+                        "source_blob":  "d39c99887fe3228dcc53a3efb9930a1304eb6e22",
+                        "target_path":  "web/activity.css",
+                        "target_sha256":  "e63841271775ebcff49d9ac4d48c25bffb7c9e90e93323de70aa77e4f5e7b7f9",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "web/activity.js",
+                        "source_blob":  "544b77541317be99fd11fbc778b65080df1437e5",
+                        "target_path":  "web/activity.js",
+                        "target_sha256":  "c24805a630b1bd010e9b65bbadeee480ccd37a45f1c302c9a6f4e7c4f949d1da",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "web/app.js",
+                        "source_blob":  "bdda4679e64ce8738c157b5c6cb3ac42b249a407",
+                        "target_path":  "web/app.js",
+                        "target_sha256":  "84719028991e6f39e3d03d954a5eff391a40ed3f140ff36715ce1b380a00ae48",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "web/debug.css",
+                        "source_blob":  "c31a00a749b1fb2328c37312b50fcfdea10a6c06",
+                        "target_path":  "web/debug.css",
+                        "target_sha256":  "bf92454c6739392c8567efcd683c2d61aeea5b62b72cec692f2ff52ca91e6c38",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "web/debug.js",
+                        "source_blob":  "066c7ad152dd85a56557dee3a55b7aea131353e9",
+                        "target_path":  "web/debug.js",
+                        "target_sha256":  "d18c46004666d39ba9e8dcf8cefd14f233c4bc794acaa6f206d9881a9084aa0b",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "web/index.html",
+                        "source_blob":  "d801511978c7e9d869e82081e0c3573f29cf5f01",
+                        "target_path":  "web/index.html",
+                        "target_sha256":  "b31204bd95c8d26dbee011da6e22ce4ae9969c71d210aad758d978d4f5c5ae85",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "adopted",
+                        "source_path":  "web/style.css",
+                        "source_blob":  "6c6f21d1a5877bd27f5de3dc8a6b648db872d5fb",
+                        "target_path":  "web/style.css",
+                        "target_sha256":  "977f1362e6e8af5af18807b8d3a0b5c97a1d3b577dc0838b54850465c0cbcdc7",
+                        "reason":  "UI再利用候補"
+                    },
+                    {
+                        "action":  "preserved_input",
+                        "source_path":  "D:\\Users\\pipe_render\\Downloads\\jev-visual-refinement\\CODEX_JEV_VISUAL_REFINEMENT_SC00_REQUEST_v0_1_JA.md",
+                        "source_blob":  null,
+                        "target_path":  "docs/visual_refinement/source/CODEX_JEV_VISUAL_REFINEMENT_SC00_REQUEST_v0_1_JA.md",
+                        "target_sha256":  "2f18dc6a9fc7e97a12961421e8da1ffc5adf76b624dc6ad2ba46419dd5634a02",
+                        "reason":  "SC00入力をbytesのまま保存"
+                    },
+                    {
+                        "action":  "preserved_input",
+                        "source_path":  "D:\\Users\\pipe_render\\Downloads\\jev-visual-refinement\\JEV_VISUAL_REFINEMENT_DESIGN_v0_4_JA.md",
+                        "source_blob":  null,
+                        "target_path":  "docs/visual_refinement/source/JEV_VISUAL_REFINEMENT_DESIGN_v0_4_JA.md",
+                        "target_sha256":  "274b7afd6bab7c3b540965fc50d613e99fc76ede8e1d36e1cf5b86a56536f99f",
+                        "reason":  "SC00入力をbytesのまま保存"
+                    },
+                    {
+                        "action":  "preserved_input",
+                        "source_path":  "D:\\Users\\pipe_render\\Downloads\\jev-visual-refinement\\JEV_VISUAL_REFINEMENT_CHAT_PLAN_v0_4_JA.md",
+                        "source_blob":  null,
+                        "target_path":  "docs/visual_refinement/source/JEV_VISUAL_REFINEMENT_CHAT_PLAN_v0_4_JA.md",
+                        "target_sha256":  "c04372b68b2c24c619ad75d4048cefc9fd53e641fb47f75c06fbcd8a1ed426a4",
+                        "reason":  "SC00入力をbytesのまま保存"
+                    }
+                ],
+    "exclusions":  [
+                       {
+                           "action":  "excluded",
+                           "source_path":  ".git/**",
+                           "reason":  "履歴・refs・hooksを共有しない"
+                       },
+                       {
+                           "action":  "excluded",
+                           "source_path":  ".env* and credentials/secrets",
+                           "reason":  "値・内容hashを読まずコピーしない"
+                       },
+                       {
+                           "action":  "excluded",
+                           "source_path":  "artifacts/**, runs/**, private/**, cache/**, models/**, real media/DB/logs",
+                           "reason":  "実data・runtime・重みを共有しない"
+                       },
+                       {
+                           "action":  "excluded",
+                           "source_path":  "Start-Viewer.cmd and scripts/**",
+                           "reason":  "旧runner・起動・検査scriptを新repoで有効化しない"
+                       },
+                       {
+                           "action":  "excluded",
+                           "source_path":  "unselected historical docs",
+                           "reason":  "指定3報告と入力正本へ限定"
+                       },
+                       {
+                           "action":  "excluded",
+                           "source_path":  "source working tree changes after specified commit",
+                           "reason":  "指定commitのblobだけを採用"
+                       }
+                   ],
+    "protected_existing":  [
+                               {
+                                   "path":  ".env",
+                                   "handling":  "existence only; content/value/hash unread; unchanged; excluded from copy, manifest hash, Git tracking and staging"
+                               }
+                           ]
+}
