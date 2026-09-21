@@ -1,0 +1,22 @@
+{
+  "profile": "SV01-MAP-M1",
+  "media_seconds": 60,
+  "asr_attempts": 24,
+  "image_attempts": 12,
+  "model_wall_seconds": 900,
+  "admission_seconds": 780,
+  "runtime_processes": 2,
+  "chunk_seconds": 2,
+  "image_interval_seconds": 4,
+  "max_chunk_seconds": 3,
+  "sync_tolerance_seconds": 0.12,
+  "queue_capacity": 2,
+  "max_asset_bytes": 268435456,
+  "max_total_bytes": 536870912,
+  "max_assets": 8,
+  "max_events": 512,
+  "retention_seconds": 86400,
+  "decoder_frame_limit": 512,
+  "decoder_preroll_seconds": 8,
+  "max_pixels": 8294400
+}

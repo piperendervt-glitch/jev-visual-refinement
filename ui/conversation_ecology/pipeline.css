@@ -1,0 +1,26 @@
+/* Compact four-stage diagram; optional records retain their own detail views. */
+.pipeline-tools{display:flex;flex-wrap:wrap;gap:4px;padding:4px 0}.pipeline-tools button{font-size:12px;padding:3px 6px}
+#schematic{display:block;position:relative;isolation:isolate;padding:4px 12px;font-size:12px;line-height:1.25}
+#schematic button:after{content:none}#schematic h3{font-size:13px;margin:0 0 5px;color:#d7f6ff}#schematic section>p{font-size:11px;color:#9bb8c9;margin:-2px 0 5px}
+.pipe-sources,.pipe-intake,.pipe-reasoning,.pipe-fields,.pipe-results{display:grid;gap:12px;position:relative}
+.pipe-sources{grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:18px}.pipe-intake{grid-template-columns:repeat(4,minmax(0,1fr))}.pipe-reasoning{grid-template-columns:repeat(2,minmax(0,1fr))}.pipe-fields{grid-template-columns:repeat(3,minmax(0,1fr))}.pipe-results{grid-template-columns:1fr 3fr}
+.pipe-grid{display:grid;gap:12px}.pipe-meaning,.pipe-field-section,.pipe-result,.pipe-observations{min-width:0}
+#schematic .pipe-box{display:grid;grid-template-columns:minmax(0,1fr) auto;align-content:center;gap:2px 4px;min-width:0;width:100%;padding:5px 7px;border:1px solid #357082;border-radius:7px;background:linear-gradient(145deg,#102c3b,#0b1b2a);text-align:left;position:relative;z-index:1;min-height:56px}
+.pipe-box b{grid-column:1/-1;font-size:12px;line-height:1.2}.pipe-box .pipe-connection{font-size:11px;color:#9bd3df}.pipe-box .pipe-state{font-size:11px;color:#e5eef5;grid-column:1/-1;grid-row:3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pipe-box small{grid-column:2;grid-row:2;font-size:11px;color:#9bb8c9;white-space:nowrap}
+#schematic .pipe-sources .pipe-box{display:flex;flex-direction:column;align-items:center;padding:5px 2px;gap:2px}.pipe-sources .pipe-state{display:none}
+.pipe-box[data-connection=NOT_CONNECTED],.pipe-box[data-connection=DISABLED]{border-color:#48616e;background:#101f2d}.pipe-box[data-connection=FIXTURE_ONLY] .pipe-connection{color:#f4cf83}
+.pipe-person b{color:#46d9e8}.pipe-place b{color:#f4b45b}.pipe-conversation b{color:#d77ce8}
+.pipe-box.pipe-muted{border-color:#355061}.pipe-box.pipe-muted b{color:#91a9ba}.pipe-warning{border-color:#eeaa61!important}.pipe-box[data-running=true] .pipe-state{color:#a8ffed}
+.pipe-lines{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:visible}.pipe-lines>path{stroke:#6adfeb;stroke-width:1.5;stroke-linejoin:round}
+.pipe-lines>path[data-planned=true]{stroke:#7b9cae}#schematic h3{position:relative;z-index:3;background:#0c1b29;width:fit-content}
+#schematic-cursor{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pipe-dot{position:absolute;left:0;top:0;width:5px;height:5px;background:#f3fffc;border-radius:50%;box-shadow:0 0 0 1px #57e5e0,0 0 7px #57e5e0;pointer-events:none;z-index:4}
+.pipe-output,.pipe-records{position:relative;z-index:3;margin-top:7px;font-size:12px;background:#0c1b29}.pipe-output summary,.pipe-records summary{cursor:pointer;color:#b3d6e3}.pipe-output .pipe-box{margin-top:10px}
+.pipe-legend{font-size:11px;line-height:1.3;color:#93b6c9;margin:7px 0 3px}.pipe-info{font-size:11px;color:#a6c8d7;margin:5px 0;overflow-wrap:anywhere}.pipe-recent{display:flex;flex-wrap:wrap;gap:4px;max-height:100px;overflow:auto}.pipe-recent button{font-size:11px;padding:4px!important}
+aside>.panel-head{padding:6px 2px}aside>.layout-diagnostics{margin:5px 12px}.detail-head{margin:8px 0 4px}
+aside>.panel-head{padding:3px 2px}#schematic-mode{font-size:12px;padding:4px 7px}
+#schematic .pipe-box{line-height:1.2}.pipe-sources{margin-bottom:12px}#map-detail{margin:5px 12px}#map-detail>summary{cursor:pointer;font-size:12px;color:#b3d6e3}
+.pipe-box .pipe-connection{grid-column:1/-1;grid-row:2;white-space:nowrap}.pipe-box .pipe-state{grid-column:1;grid-row:3}.pipe-box small{grid-row:3}
+@media(min-width:761px){main{min-height:630px;grid-template-columns:minmax(0,1.8fr) minmax(420px,1fr)}aside{padding:4px 10px}}
+@media(max-width:1100px) and (min-width:761px){main{grid-template-columns:minmax(0,1.3fr) minmax(410px,1fr)}}
+@media(max-width:760px){aside{max-height:none}#schematic{padding:5px 10px}.pipe-sources{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.pipe-intake{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.pipe-fields{gap:7px}.pipe-fields .pipe-box{padding:5px 4px}.pipe-box small{font-size:11px}.pipe-results{grid-template-columns:1fr 2fr}}

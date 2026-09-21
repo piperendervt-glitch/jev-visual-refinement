@@ -1,0 +1,40 @@
+{
+  "mode": "FIXTURE",
+  "profile": "hearing-recorded-v1",
+  "origin": "hand-authored synthetic evaluator; no expected winner in runtime",
+  "utterance": "この処理を軽くしたい",
+  "explicit_utterance": "動画解析を軽くしたい",
+  "previews": [
+    {"id":"pv-a","target":"video","operation":"diagnose","references":"video logs: not acquired","deliverable":"diagnostic proposal","unresolved_keys":["target_binding"]},
+    {"id":"pv-b","target":"conversation","operation":"diagnose","references":"conversation logs: not acquired","deliverable":"diagnostic proposal","unresolved_keys":["target_binding"]}
+  ],
+  "axes": {
+    "pv-a|pv-b|target":{"relation":"materially_different","impact":4,"dependency_key":"target_binding"},
+    "pv-a|pv-b|operation":{"relation":"equivalent","impact":0,"dependency_key":null},
+    "pv-a|pv-b|references":{"relation":"materially_different","impact":3,"dependency_key":"target_binding"},
+    "pv-a|pv-b|deliverable":{"relation":"materially_different","impact":3,"dependency_key":"target_binding"}
+  },
+  "goals":[
+    {"id":"target-goal","user_gap":"target_binding","resolution_status":"unresolved","disposition":"ask_now","askable":true,"resolves_gap":4,"task_fit":4,"timing_fit":4,"uncertainty_handling":4},
+    {"id":"priority-goal","user_gap":"preference","resolution_status":"unresolved","disposition":"ask_later","askable":true,"resolves_gap":2,"task_fit":3,"timing_fit":1,"uncertainty_handling":4}
+  ],
+  "questions":[
+    {"id":"q-a","text":"軽くしたいのは動画解析と会話処理のどちらですか？ 別の対象や後で、でも構いません。","scores":{"task_fit":3.8,"context_fit":3.8,"timing_fit":3.6}},
+    {"id":"q-b","text":"どの処理を軽くしたいですか？ 分からない場合は保留できます。","scores":{"task_fit":3.6,"context_fit":3.4,"timing_fit":3.7}}
+  ],
+  "planned_job_scores":{
+    "inspect":{"usefulness":4,"incremental_value":3,"resolves_gap":4},
+    "explain":{"usefulness":3,"incremental_value":2,"resolves_gap":2}
+  },
+  "replies": {
+    "今日は自宅で作業している。動画解析を軽くし、今回はメモリ削減を優先したい":{"target":"video","preference":"memory","state":"RESOLVED"},
+    "動画解析の方です":{"target":"video","state":"RESOLVED"},
+    "会話処理の方です":{"target":"conversation","state":"RESOLVED"},
+    "動画側で、メモリを減らしたい":{"target":"video","preference":"memory","state":"RESOLVED"},
+    "はい":{"target":null,"state":"PARTIAL"},
+    "分からない":{"target":null,"state":"DEFERRED"},
+    "後で":{"target":null,"state":"DEFERRED"},
+    "両方":{"target":["video","conversation"],"state":"PARTIAL"},
+    "違う。字幕の方":{"target":"subtitle","state":"RESOLVED","denied_previous":true}
+  }
+}

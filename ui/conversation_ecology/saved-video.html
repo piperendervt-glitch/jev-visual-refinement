@@ -1,0 +1,24 @@
+<section class="saved-video" aria-label="保存動画でテスト">
+<p class="eyebrow">SAVED VIDEO · LOCAL OBSERVATION</p><h1>保存動画でテスト</h1>
+<p>選んだ動画をこのPC内だけで解析します。観測まで接続・文脈反映は後段。下の会話は独立したC0合成デモです。</p>
+<label for="sv-file">動画ファイルを選択</label><input id="sv-file" type="file" multiple accept=".mp4,.webm,.mov,.m4v,.mkv">
+<button id="sv-cancel">取込みを取り消す</button>
+<p>取込みコピーは最大256 MiB/素材・合計512 MiB、最大8素材。正常終了で削除、異常終了時も24時間後は利用不可。原本は変更しません。</p>
+<label for="sv-assets">登録した動画</label><select id="sv-assets"><option value="">素材未選択</option></select>
+<!-- PLAYER_START -->
+<div class="player-title"><b>動画プレイヤー</b><button id="sv-open" type="button">素材・解析を開く</button></div>
+<p id="sv-name">素材未選択</p>
+<div class="player-body"><video id="sv-video" muted playsinline preload="metadata"></video><div class="player-controls">
+<div class="controls"><button id="sv-play">再生 / 再開</button><button id="sv-pause">一時停止</button><button id="sv-stop">入力を停止</button></div>
+<div class="player-seek"><input id="sv-range" aria-label="動画シークバー" type="range" min="0" max="0" step="0.1" value="0" disabled><span id="sv-preview"></span></div>
+<div class="player-volume"><label><input id="sv-monitor" type="checkbox">音声モニター</label><label>音量 <input id="sv-volume" aria-label="再生音量" type="range" min="0" max="1" step="0.05" value="1"></label><small>解析PCMとは独立</small></div>
+<p id="sv-position">再生位置 0 s</p><p id="sv-brief" role="status">素材未選択</p><p id="sv-error" role="alert"></p>
+</div></div>
+<!-- PLAYER_END -->
+<label for="sv-seek">移動先（秒）</label><input id="sv-seek" type="number" min="0" step="0.1" value="0"><button id="sv-go">シーク</button>
+<p id="sv-status">初期化中</p>
+<h3>ローカル解析の状態</h3><pre id="sv-models"></pre><p>実カメラ・マイク、Jev、外部推論、実作業：接続なし</p>
+<h3>入力と解析の詳細</h3><p>ASRは原文、画像は未評価の観測候補です。旧epochの結果は履歴のみで現在の観測へ採用しません。</p>
+<div class="sv-layout"><div id="sv-events"></div><pre id="sv-detail">入力未公開</pre></div>
+<details><summary>公開区間・累計予算・状態JSON</summary><pre id="sv-state"></pre></details>
+</section>

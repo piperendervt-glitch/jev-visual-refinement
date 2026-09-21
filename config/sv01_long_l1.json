@@ -1,0 +1,25 @@
+{
+  "profile": "SV01-LONG-L1",
+  "media_seconds": 210,
+  "asr_attempts": 120,
+  "image_attempts": 60,
+  "model_wall_seconds": 1800,
+  "admission_seconds": 1680,
+  "runtime_processes": 2,
+  "chunk_seconds": 2,
+  "image_interval_seconds": 4,
+  "max_chunk_seconds": 3,
+  "sync_tolerance_seconds": 0.12,
+  "queue_capacity": 2,
+  "max_asset_bytes": 268435456,
+  "max_total_bytes": 536870912,
+  "max_assets": 8,
+  "max_events": 1024,
+  "retention_seconds": 86400,
+  "decoder_frame_limit": 512,
+  "decoder_preroll_seconds": 12,
+  "max_pixels": 8294400,
+  "allowed_asset_sha256": [
+    "e2a3e10427133c0e517cc6aa9fa8a9200a4c00fdfb233d62819733536e80ccaa"
+  ]
+}

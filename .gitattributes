@@ -1,0 +1,2 @@
+# 初回snapshotの改行・bytesをGit登録時にも維持する。
+* -text -filter -ident

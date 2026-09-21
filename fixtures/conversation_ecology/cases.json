@@ -1,0 +1,26 @@
+{
+  "mode": "FIXTURE",
+  "cases": [
+    {
+      "id": "short",
+      "text": "こんにちは。",
+      "profile": "balanced"
+    },
+    {
+      "id": "correction",
+      "text": "ありがとう",
+      "revision_text": "訂正します。こんにちは。",
+      "profile": "balanced"
+    },
+    {
+      "id": "unsuitable",
+      "text": "困っています。相談したいです。",
+      "profile": "low"
+    },
+    {
+      "id": "work",
+      "text": "こんにちは、でもこの関数を修正して",
+      "profile": "balanced"
+    }
+  ]
+}
