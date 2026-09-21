@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Jev Visual Refinement — SC01 Fixture</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/preview.css">
+</head>
+<body>
+<header><div><b>Jev Visual Refinement</b><span>非同期選抜・保存</span></div><strong>FIXTURE</strong></header>
+<main>
+  <section class="panel pipeline"><h1>固定 lane・処理状態</h1><div id="lanes"></div></section>
+  <section class="panel preview"><h1>キーフレーム・mask</h1><div class="image-pair"><figure><img id="keyframe-image" alt="synthetic keyframe"><figcaption>合成キーフレーム</figcaption></figure><figure><img id="main-image" alt="fixture mask preview"><figcaption>fixture mask</figcaption></figure></div><div id="preview-state"></div><button id="follow" type="button">採用へ戻る</button></section>
+  <section class="panel matrix"><h1>評価マトリクス <small>Q＝主採用軸</small></h1><table><thead><tr><th>lane</th><th>Q 主</th><th>A 曖昧さ</th><th>R 解決見込み</th><th>I 重要性</th><th>C コスト適合</th><th>判定</th></tr></thead><tbody id="matrix"></tbody></table></section>
+  <section class="panel timeline"><h1>選抜履歴（commit順）</h1><ol id="timeline"></ol></section>
+  <section class="panel queue"><h1>queue</h1><div id="queues"></div><p>suite 単位。mask 数や HTTP attempt と混在しません。</p></section>
+</main>
+<template id="lane-template"><button class="lane" type="button"><span class="lane-name"></span><span class="lane-stage"></span><span class="lane-queue"></span></button></template>
+<script src="/app.js"></script>
+</body>
+</html>

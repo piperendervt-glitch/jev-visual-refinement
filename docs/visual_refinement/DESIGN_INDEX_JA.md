@@ -10,6 +10,8 @@
 
 ## SC別入口
 
+SC01の現行入口は `source/sc01/` のv0.5原本群、`sc01/SC01_IMPLEMENTATION_REPORT_JA.md`、`sc01/HANDOFF_STATE_JA.md` である。下表のv0.4参照はSC00時点の履歴として保持する。
+
 | SC | 正本の主参照 | repo内入口 |
 |---|---|---|
 | SC00 | 0〜3、18〜21、23、25（UI再利用時14） | 本索引、`SC00_FACTS_JA.md`、`EXECUTION_PROFILE_PROPOSAL_JA.md` |
@@ -29,4 +31,3 @@
 - 旧入口のREADME/AGENTSは `docs/source_reference/` に参照名で隔離した。現在の指示ではない。
 
 全文設計の再生成は行っていない。具体的な実path/symbolと未確認事項は `SC00_FACTS_JA.md` に一元化する。
-

@@ -1,0 +1,72 @@
+{
+  "schema": "vr_sc01_execution_profile_v1",
+  "contract_version": "0.5",
+  "status": "EXECUTED_FIXTURE_ONLY",
+  "authorization_source": "docs/visual_refinement/source/sc01/CODEX_JEV_VISUAL_REFINEMENT_SC01_REQUEST_v0_1_JA.md",
+  "repository": "C:/dev/jev-visual-refinement",
+  "branch": "sc01/async-selection-core",
+  "starting_head": "2c87493e5d24863b6767cc48bbd6b85b774a6015",
+  "environment": {
+    "python": "CPython 3.12.10",
+    "platform": "Windows x64",
+    "browser_check": "Chrome extension browser against 127.0.0.1",
+    "available_disk_bytes_before_fixture": 310966296576,
+    "new_dependencies": 0,
+    "model_downloads": 0
+  },
+  "limits": {
+    "keyframes_per_run": 2,
+    "lanes_per_keyframe": 4,
+    "masks_per_candidate": 8,
+    "source_width_max": 640,
+    "source_height_max": 360,
+    "evidence_versions_per_keyframe": 3,
+    "evaluation_suites_per_run": 64,
+    "domain_events_per_run": 5000,
+    "fixture_workers": 2,
+    "lane_jobs_concurrent": 1,
+    "evaluator_concurrent": 2,
+    "default_queue_capacity": 8,
+    "drain_seconds": 5,
+    "saved_runs_per_session": 20,
+    "saved_bytes_total": 268435456,
+    "retention_seconds": 604800,
+    "evidence_coalesce_ms": 0
+  },
+  "origins": {
+    "media": "FIXTURE",
+    "segmentation": "FIXTURE",
+    "measurement": "FIXTURE_DECLARED",
+    "evaluation": "FIXTURE",
+    "delivery": "ORIGINAL"
+  },
+  "observed_run": {
+    "path": "runs/sc01-fixture-browser-final",
+    "files": 6,
+    "bytes": 95651,
+    "database_bytes": 94208,
+    "events": 10,
+    "decisions": 3,
+    "revisions": 2,
+    "ui_receipts": 1,
+    "visible_ui_receipts": 1,
+    "final_status": "CLOSED_SUCCEEDED",
+    "retained_after_shutdown": true,
+    "session_saved_runs": 2,
+    "session_saved_files": 12,
+    "session_saved_bytes": 191302
+  },
+  "boundaries": {
+    "real_video": 0,
+    "real_camera": 0,
+    "real_gpu": 0,
+    "real_jev": 0,
+    "external_network_calls": 0,
+    "github_operations": 0,
+    "dotenv_loads": 0,
+    "parent_repository_writes": 0,
+    "loopback_http_runs": 2
+  },
+  "later_profiles_approved": false,
+  "sc02_status": "SC02_NOT_STARTED"
+}

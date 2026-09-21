@@ -1,0 +1,5 @@
+.image-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.image-pair figure{margin:0;background:#020a10;border:1px solid #2a6687}
+.image-pair img{display:block;width:100%;aspect-ratio:16/9;object-fit:contain}
+.image-pair figcaption{padding:4px 7px;color:#8dd8ff}
+@media(max-width:800px){.image-pair{grid-template-columns:1fr}}

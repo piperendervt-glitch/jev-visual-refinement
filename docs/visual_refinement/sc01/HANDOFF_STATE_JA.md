@@ -1,0 +1,34 @@
+# SC01 引継ぎ状態
+
+- 状態: `SC01_IMPLEMENTED_PENDING_USER_REVIEW`。
+- 次段: `SC02_NOT_STARTED`。
+- repo: `C:\dev\jev-visual-refinement`。
+- branch: `sc01/async-selection-core`。
+- 開始 HEAD: `2c87493e5d24863b6767cc48bbd6b85b774a6015`。
+- 契約: `JEV_VISUAL_REFINEMENT_SC01_DATA_CONTRACT_v0_5_JA.md`、SHA-256一致。
+- schema: `vr_sc01_v1`、contract `0.5`。
+- 核: `src/visual_refinement_sc01/core.py:FixtureKernel`。
+- HTTP: `src/visual_refinement_sc01/server.py:FixtureServer`、loopback限定。
+- UI: `ui/visual_refinement_sc01/`、固定 S/A/B/C・FIXTURE常設。
+- 選抜: Qだけ、下限3、先着暫定、後着上位改訂、下位／同点維持。
+- 診断 A/R/I/C は選抜へ合算しない。
+- E1でE0 winnerは stale fallback、異context差はnull。
+- Decisionは維持・非採用も保存、Revisionは表示変更だけ保存。
+- SQLite transactionは評価・Decision・Revision・state・outboxを原子的に確定。
+- artifactは登録IDだけ解決し、任意path・repo rootを公開しない。
+- 手動プレビューはwinnerを変更せず、明示操作で採用へ戻る。
+- Replayはcommit順、外部評価・retry・dotenv読込0。
+- 専用試験: 24/24成功、CF01〜36対応。
+- 実ブラウザー: PASS。4 lane、表、履歴、queue、mask、手動閲覧、復帰を確認。
+- visible UI receipt: 1件。
+- 正常終了: `CLOSED_SUCCEEDED`、loop thread非生存、listenerなし。
+- 最終保存 run: `runs/sc01-fixture-browser-final`、95,651 bytes。修正前runを含む2 runs／191,302 bytesを保持。
+- 初期期限: 7日、最大20 run／256MiB、明示cleanupのみ。
+- 証拠画像: `docs/visual_refinement/sc01/evidence/sc01-browser-manual-preview.png`。
+- profile: `docs/visual_refinement/sc01/SC01_EXECUTION_PROFILE.json`。
+- CF表: `docs/visual_refinement/sc01/CF_COVERAGE.json`。
+- 実装報告: `docs/visual_refinement/sc01/SC01_IMPLEMENTATION_REPORT_JA.md`。
+- `.env`: 未読・未hash・未変更・非Git・非配信。
+- 母repo変更0、依存/model取得0、外部network/GitHub操作0。
+- 実動画・GPU・Jevは未実施。fixture成功を実機認定へ転用しない。
+- SC02以降の仕様・取得・実行は未許可のまま。
