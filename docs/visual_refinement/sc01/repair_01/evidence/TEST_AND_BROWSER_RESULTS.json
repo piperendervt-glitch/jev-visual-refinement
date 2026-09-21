@@ -1,0 +1,17 @@
+{
+  "schema":"sc01_repair_evidence_v1",
+  "automated":{"javascript_syntax":"PASS","unittest":{"result":"PASS","tests":44,"failures":0,"errors":0,"skipped":0}},
+  "browser":{"surface":"real Chrome","result":"PASS","observations":[
+    {"step":"initial","snapshot_seq":12,"queued":3,"active":0,"succeeded":0,"winner":null},
+    {"step":"A E0","snapshot_seq":15,"queued":2,"succeeded":1,"winner":"cand_frame_k0_a","q":"3.2","receipt":"accepted"},
+    {"step":"B manual then S E0 external release","queued":1,"succeeded":2,"winner":"cand_frame_k0_s","rendered":"cand_frame_k0_b","focused_lane":"B"},
+    {"step":"E1 waiting","snapshot_seq":26,"winner":null,"stale_fallback":"cand_frame_k0_s","queued":4},
+    {"step":"S E1","snapshot_seq":29,"winner":"cand_frame_k0_s","q":"3.8","reason":"REFRESHED_SAME_CANDIDATE","receipt":"accepted"},
+    {"step":"historical cursor","cursor":14,"winner":"cand_frame_k0_a","future_decision_nodes_hidden":2},
+    {"step":"saved reopen","run_status":"CLOSED_PARTIAL","coverage":"TERMINAL_PARTIAL","snapshot_seq":31,"decisions":3},
+    {"step":"image failure","artifact":"art_mask_frame_k0_s","http":503,"receipt_count_before":10,"receipt_count_after":10},
+    {"step":"image recovery","receipt_state":"accepted","receipt_count":11,"latest_classification":"PRIMARY_VISIBLE"}
+  ],"captures":["Browser tool capture: historical cursor #14","Browser tool capture: current E1 winner S"]},
+  "shutdown":[{"run":"sc01-repair-browser-20260922","loop_failed":false,"loop_thread_alive":false},{"run":"sc01-repair-browser-final-20260922","loop_failed":false,"loop_thread_alive":false}],
+  "saved_replay":{"path":"runs/sc01-repair-browser-final-20260922","status":"CLOSED_PARTIAL","reason":"C and remaining planned evaluations intentionally incomplete"}
+}

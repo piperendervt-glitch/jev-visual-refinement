@@ -81,7 +81,8 @@ class SelectionContractTests(KernelCase):
         zero = self.evaluate("A", "0")
         self.assertEqual(zero["reason_code"], "BELOW_Q_THRESHOLD")
         missing = self.kernel.accept_evaluation("frame_k0", "S", 0, {"Q": None, "A": "2"}, event_id="missing_q")
-        self.assertEqual(missing["reason_code"], "EVALUATION_FAILED")
+        self.assertEqual(missing["accepted_axes"], ["A"])
+        self.assertIsNone(missing["decision"])
         partial = self.kernel.accept_evaluation("frame_k0", "B", 0, {"Q": "3.4", "A": None}, event_id="partial_q")
         self.assertEqual(partial["reason_code"], "FIRST_ELIGIBLE")
         before = len(self.kernel.view("frame_k0")["timeline_page"]["revisions"])
@@ -94,24 +95,26 @@ class SelectionContractTests(KernelCase):
         stale = self.evaluate("A", "3.9", version=0)
         self.assertEqual(stale["reason_code"], "OLD_EVIDENCE")
         first = self.evaluate("S", "3.3", version=1)
-        self.assertEqual(first["reason_code"], "FIRST_ELIGIBLE_IN_NEW_EVIDENCE")
+        self.assertEqual(first["reason_code"], "REFRESHED_SAME_CANDIDATE")
         view = self.kernel.view("frame_k0")
         self.assertIsNone(next(r for r in view["rows"] if r["lane_id"] == "A")["current_q_delta"])
         self.kernel.publish_evidence("frame_k0", 2)
         refreshed = self.evaluate("S", "3.8", version=2)
-        self.assertEqual(refreshed["reason_code"], "FIRST_ELIGIBLE_IN_NEW_EVIDENCE")
+        self.assertEqual(refreshed["reason_code"], "REFRESHED_SAME_CANDIDATE")
 
     def test_cf14_duplicates_are_idempotent(self):
         self.frame()
         one = self.evaluate("A", "3.2")
         again = self.kernel.accept_evaluation("frame_k0", "A", 0, dict(SCORES, Q="4"), event_id="different_event")
-        self.assertEqual(one["decision_id"], again["decision_id"])
+        self.assertEqual(again["accepted_axes"], [])
+        self.assertIsNone(again["decision"])
         self.assertEqual(len(self.kernel.view("frame_k0")["timeline_page"]["decisions"]), 1)
 
     def test_cf15_invalid_envelope_and_decimal_are_rejected(self):
         self.frame()
-        with self.assertRaisesRegex(ValueError, "envelope"):
-            self.kernel.accept_evaluation("frame_k0", "A", 0, SCORES, event_id="bad_binding", returned_binding="live_unknown")
+        isolated = self.kernel.accept_evaluation("frame_k0", "A", 0, SCORES, event_id="bad_binding", returned_binding="live_unknown")
+        self.assertEqual(isolated["envelope_status"], "INVALID")
+        self.assertEqual(isolated["accepted_axes"], [])
         for bad in ("NaN", "Infinity", "3e0", "+3", "04"):
             with self.assertRaises(ValueError):
                 normalize_decimal(bad)
@@ -127,18 +130,24 @@ class SelectionContractTests(KernelCase):
 
 class QueueProjectionTests(KernelCase):
     def test_cf17_cf18_queue_units_counts_and_freshness(self):
-        q = self.kernel.queue_snapshot(queued=0, active=1, succeeded=2, longest_active_ms=9000, health="STALE_TELEMETRY")
+        self.kernel.publish_frame()
+        for i in range(3): self.kernel.create_job(f"job_q{i}", "frame_k0", None, "EVALUATION", "EVALUATION_SUITE", status="QUEUED")
+        self.kernel.start_job("job_q0")
+        for i in (1,2): self.kernel.start_job(f"job_q{i}"); self.kernel.finish_job(f"job_q{i}")
+        self.kernel.advance_fixture_clock(9000); q = self.kernel.queue_snapshot("frame_k0")
         self.assertIsNone(q["oldest_queued_ms"])
         self.assertEqual(q["unit"], "EVALUATION_SUITE")
         self.assertEqual(q["accepted_total"], 3)
-        self.assertEqual(q["health"], "STALE_TELEMETRY")
-        with self.assertRaises(ValueError):
-            self.kernel.queue_snapshot(queued=0, active=0, oldest_ms=1)
+        self.assertEqual(q["longest_active_ms"], 9000)
+        self.assertEqual(q["health"], "OK")
 
     def test_cf19_cf20_capacity_status_and_distinct_projection_fields(self):
-        q = self.kernel.queue_snapshot(queued=4, active=2, capacity=4, oldest_ms=5000)
+        self.kernel.publish_frame()
+        for i in range(8): self.kernel.create_job(f"job_sat{i}", "frame_k0", None, "EVALUATION", "EVALUATION_SUITE", status="QUEUED")
+        q = self.kernel.queue_snapshot("frame_k0")
         self.assertEqual(q["congestion"], "SATURATED")
-        self.frame(); self.evaluate("A", "3.2")
+        for lane in "SABC": self.kernel.publish_candidate("frame_k0", lane)
+        self.evaluate("A", "3.2")
         row = self.kernel.view("frame_k0")["rows"][1]
         self.assertEqual(row["source_origin"], "FIXTURE")
         self.assertEqual(row["selection_status"], "CURRENT_PROVISIONAL")
@@ -153,14 +162,14 @@ class QueueProjectionTests(KernelCase):
 
     def test_cf23_cf24_cf25_receipt_is_separate_and_no_pulse_loop(self):
         self.frame(); self.evaluate("A", "3.2")
-        before = len(self.kernel.event_page())
+        before = len(self.kernel.event_page()["events"])
         view = self.kernel.view("frame_k0")
         receipt = {"receipt_id": "receipt_one", "view_session_id": "view_one",
-            "source_revision_id": view["selection"]["display_revision_id"], "source_commit_seq": view["snapshot_seq"],
-            "frame_id": "frame_k0", "display_mode": "FOLLOW_SELECTION",
+            "source_revision_id": view["selection"]["display_revision_id"], "source_commit_seq": view["selection"]["display_revision_seq"],
+            "run_id": view["run_id"], "frame_id": "frame_k0", "generation": view["generation"], "display_mode": "FOLLOW_SELECTION",
             "rendered_candidate_id": "cand_frame_k0_a", "visible": False, "skipped_revision_ids": []}
         self.kernel.receipt(receipt); self.kernel.receipt(receipt)
-        self.assertEqual(len(self.kernel.event_page()), before)
+        self.assertEqual(len(self.kernel.event_page()["events"]), before)
         self.assertEqual(self.kernel.db.execute("SELECT COUNT(*) FROM receipts").fetchone()[0], 1)
         self.assertEqual(view["flow_pulses"], [])
 
@@ -182,10 +191,10 @@ class PersistenceBoundaryTests(KernelCase):
         self.assertEqual(self.kernel._meta("network_calls"), "0")
 
     def test_cf28_artifact_boundary_expiry_and_traversal(self):
-        reg = ArtifactRegistry(Path(self.tmp.name) / "safe", "safe_run", now=10)
+        reg = ArtifactRegistry(Path(self.tmp.name) / "safe", "safe_run", retention_now=10)
         with self.assertRaises(ValueError):
             reg.register("art_bad", "../secret", b"x", "text/plain")
-        reg.register("art_ok", "one.txt", b"ok", "text/plain", expires_at=11)
+        reg.register("art_ok", "one.bin", b"ok", "application/octet-stream", expires_at=11)
         with self.assertRaises(FileNotFoundError):
             reg.resolve("art_ok", now=11)
         with self.assertRaises(FileNotFoundError):
@@ -205,7 +214,7 @@ class PersistenceBoundaryTests(KernelCase):
         self.frame(); low = self.evaluate("A", "2.9", C="4")
         self.assertEqual(low["reason_code"], "BELOW_Q_THRESHOLD")
         self.assertNotIn("C", low["reason_code"])
-        self.kernel.finalize("frame_k0", partial=True)
+        self.kernel.finalize("frame_k0")
         view = self.kernel.view("frame_k0")
         self.assertIsNone(view["selection"]["winner_id"])
         self.assertEqual(view["coverage_state"], "TERMINAL_PARTIAL")
@@ -214,7 +223,7 @@ class PersistenceBoundaryTests(KernelCase):
     def test_cf32_cf33_commit_order_and_scope_are_explicit(self):
         self.frame(); self.evaluate("S", "3.6"); self.kernel.publish_evidence("frame_k0", 1)
         self.evaluate("A", "3.9", version=0); self.evaluate("C", "3.3", version=1)
-        events = self.kernel.event_page()
+        events = self.kernel.event_page()["events"]
         self.assertEqual([e["commit_seq"] for e in events], list(range(1, len(events) + 1)))
         self.assertTrue(all(e["frame_id"] in {None, "frame_k0"} for e in events))
 
@@ -223,14 +232,14 @@ class PersistenceBoundaryTests(KernelCase):
         self.assertEqual(canonical_json({"b": 1, "a": 2}), '{"a":2,"b":1}')
         self.assertEqual(len(content_digest({"a": "3.6"})), 64)
         self.frame(); raw = b"3.600\x00raw"; self.kernel.accept_evaluation("frame_k0", "A", 0, SCORES, event_id="raw_one", raw=raw)
-        digest = self.kernel.db.execute("SELECT raw_digest FROM evaluations").fetchone()[0]
+        digest = self.kernel.db.execute("SELECT raw_digest FROM eval_attempts").fetchone()[0]
         from hashlib import sha256
         self.assertEqual(digest, sha256(raw).hexdigest())
-        self.kernel.close(); self.kernel = FixtureKernel(self.db, self.artifacts, create=False, now=1)
+        self.kernel.close(); self.kernel = FixtureKernel(self.db, self.artifacts, create=False, retention_now=1)
         self.kernel.close()
         conn = sqlite3.connect(self.db); conn.execute("UPDATE meta SET value='vr_sc02_v1' WHERE key='schema_version'"); conn.commit(); conn.close()
         with self.assertRaises(ValueError):
-            FixtureKernel(self.db, self.artifacts, create=False, now=1)
+            FixtureKernel(self.db, self.artifacts, create=False, retention_now=1)
         self.kernel = object()  # tearDown guard
 
     def test_cf36_fixture_kernel_has_no_vendor_or_dotenv_dependency(self):

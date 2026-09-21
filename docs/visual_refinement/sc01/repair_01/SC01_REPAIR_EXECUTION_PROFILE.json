@@ -1,0 +1,17 @@
+{
+  "schema":"sc01_repair_execution_profile_v1",
+  "authorization":"CODEX_JEV_VISUAL_REFINEMENT_SC01_REPAIR_REQUEST_v0_1_JA.md",
+  "date":"2026-09-22",
+  "repository":"C:/dev/jev-visual-refinement",
+  "branch":"sc01/async-selection-core",
+  "start_head":"4981ac914e23b54be54ba8a65a9adfdb9434f10e",
+  "environment":{"os":"Windows","python":"3.12","browser":"Chrome extension controlled by the official Browser skill"},
+  "limits":{"saved_runs":20,"session_bytes":268435456,"retention_seconds":604800,"keyframes_per_run":2,"lanes_per_frame":4,"masks_per_candidate":8,"max_frame":"640x360","evidence_versions":3,"evaluation_suites":64,"domain_events":5000,"queue_capacity":8,"evaluation_concurrency":2,"http_connections":8,"request_timeout_seconds":1.0},
+  "usage_before_reported":{"saved_runs":2,"bytes":191302},
+  "usage_after_measured":{"run_directories":4,"files":24,"bytes":744014,"repair_runs_added":2},
+  "saved_repair_runs":["runs/sc01-repair-browser-20260922","runs/sc01-repair-browser-final-20260922"],
+  "preservation":{"old_runs_modified":false,"old_reports_rewritten":false,"env_read":false,"env_hashed":false,"mother_repo_modified":false},
+  "communications":{"owned_loopback":true,"external_api":0,"cdn":0,"github":0},
+  "downloads":{"dependencies":0,"models":0,"browser_runtime":0},
+  "execution":{"real_video":0,"gpu":0,"real_jev":0,"test_count":44,"browser_runs":2,"normal_shutdowns":2}
+}

@@ -1,38 +1,28 @@
 "use strict";
-const state={preview:null,lastSeq:0,viewSession:"view_"+crypto.randomUUID().replaceAll("-","")};
-const esc=s=>String(s??"");
-const score=a=>a.status==="VALID"?a.score_decimal:`— ${a.missing_reason||a.status}`;
-async function snapshot(){
-  const suffix=state.preview?`?preview=${encodeURIComponent(state.preview)}`:"";
-  const response=await fetch("/api/sc01/snapshot"+suffix,{cache:"no-store"});
-  if(!response.ok)throw new Error("snapshot_failed");
-  render(await response.json());
+const state={preview:null,historicalCursor:null,operation:0,appliedSeq:-1,pollTimer:null,viewSession:"view_"+crypto.randomUUID().replaceAll("-",""),renderToken:0,receiptKeys:new Set(),receiptInFlight:new Set(),laneNodes:new Map(),rowNodes:new Map(),timelineNodes:new Map()};
+const $=selector=>document.querySelector(selector),text=value=>String(value??"—");
+const score=axis=>axis.status==="VALID"?axis.score_decimal:`— ${axis.missing_reason||axis.status}`;
+const artifactUrl=id=>`/api/sc01/artifacts/${encodeURIComponent(id)}`;
+function schedule(){clearTimeout(state.pollTimer);state.pollTimer=setTimeout(()=>loadView(false).catch(showError),400);}
+function showError(error){document.body.dataset.error=error.message;schedule();}
+async function loadView(userOperation=true){
+  if(userOperation)state.operation+=1;const operation=state.operation;
+  const url=state.historicalCursor!==null?`/api/sc01/replay?frame=frame_k0&cursor=${state.historicalCursor}`:`/api/sc01/snapshot?frame=frame_k0${state.preview?`&preview=${encodeURIComponent(state.preview)}`:""}`;
+  const response=await fetch(url,{cache:"no-store"});if(!response.ok)throw new Error(`snapshot_${response.status}`);
+  const payload=await response.json();if(operation!==state.operation)return;const view=payload.view||payload;
+  if(state.historicalCursor===null&&view.snapshot_seq<state.appliedSeq)return;if(state.historicalCursor===null)state.appliedSeq=view.snapshot_seq;
+  document.body.dataset.error="";render(view);schedule();
 }
-function render(view){
-  const lanes=document.querySelector("#lanes");lanes.replaceChildren();
-  const body=document.querySelector("#matrix");body.replaceChildren();
-  for(const row of view.rows){
-    const lane=document.querySelector("#lane-template").content.firstElementChild.cloneNode(true);
-    lane.dataset.candidate=row.candidate_id||"";lane.querySelector(".lane-name").textContent=`${row.lane_id} — ${row.architecture_label}`;
-    lane.querySelector(".lane-stage").textContent=`${row.generation_status} / ${row.evaluation_status}`;
-    lane.querySelector(".lane-queue").textContent=row.current_reason_code;
-    lane.disabled=!row.candidate_id;lane.addEventListener("click",()=>{state.preview=row.candidate_id;snapshot();});lanes.append(lane);
-    const tr=document.createElement("tr");if(row.candidate_id===view.selection.winner_id)tr.className="winner";
-    const cells=[row.lane_id,...["Q","A","R","I","C"].map(a=>score(row.axis_results[a])),row.current_reason_code+(row.current_q_delta!==null?` (${row.current_q_delta})`:"")];
-    for(const value of cells){const td=document.createElement("td");td.textContent=esc(value);tr.append(td);}body.append(tr);
-  }
-  const rendered=view.preview.rendered_candidate_id;
-  const row=view.rows.find(r=>r.candidate_id===rendered);
-  document.querySelector("#keyframe-image").src=`/api/sc01/artifacts/${encodeURIComponent(view.preview.keyframe_artifact_ref)}`;
-  document.querySelector("#main-image").src=row?.thumbnail_ref?`/api/sc01/artifacts/${encodeURIComponent(row.thumbnail_ref)}`:"";
-  document.querySelector("#preview-state").textContent=view.preview.display_mode==="MANUAL_CANDIDATE"?`手動閲覧: ${rendered}（主採用は変更しません）`:`主採用を追従: ${rendered||"採用なし"}`;
-  const timeline=document.querySelector("#timeline");timeline.replaceChildren();
-  for(const decision of view.timeline_page.decisions){const li=document.createElement("li");li.textContent=`#${decision.commit_seq} ${decision.reason_code}: ${decision.previous_winner_id||"なし"} → ${decision.winner_after_id||"なし"}`;timeline.append(li);}
-  const q=view.queues[0];document.querySelector("#queues").textContent=`${q.congestion} / 待機 ${q.queued} / 実行 ${q.active} / 完了 ${q.succeeded_total} / 最古待機 ${q.oldest_queued_ms??"—"}`;
-  if(view.selection.display_revision_id&&view.snapshot_seq!==state.lastSeq){
-    state.lastSeq=view.snapshot_seq;
-    requestAnimationFrame(()=>requestAnimationFrame(()=>fetch("/api/sc01/receipts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({receipt_id:"receipt_"+crypto.randomUUID().replaceAll("-",""),view_session_id:state.viewSession,source_revision_id:view.selection.display_revision_id,source_commit_seq:view.snapshot_seq,frame_id:view.frame_id,display_mode:view.preview.display_mode,rendered_candidate_id:rendered,visible:document.visibilityState==="visible",skipped_revision_ids:[]})})));
-  }
-}
-document.querySelector("#follow").addEventListener("click",()=>{state.preview=null;snapshot();});
-snapshot().catch(error=>{document.body.dataset.error=error.message;});
+function keyedLane(row){let node=state.laneNodes.get(row.lane_id);if(!node){node=$("#lane-template").content.firstElementChild.cloneNode(true);node.addEventListener("click",()=>{state.preview=node.dataset.candidate||null;state.historicalCursor=null;loadView(true).catch(showError);});state.laneNodes.set(row.lane_id,node);$("#lanes").append(node);}node.dataset.candidate=row.candidate_id||"";node.disabled=!row.candidate_id;node.querySelector(".lane-name").textContent=`${row.lane_id} — ${row.architecture_label}`;node.querySelector(".lane-stage").textContent=`${row.generation_status} / ${row.evaluation_status}`;node.querySelector(".lane-queue").textContent=row.current_reason_code;}
+function keyedRow(row,view){let tr=state.rowNodes.get(row.lane_id);if(!tr){tr=document.createElement("tr");for(let i=0;i<8;i++)tr.append(document.createElement("td"));state.rowNodes.set(row.lane_id,tr);$("#matrix").append(tr);}tr.className=row.candidate_id===view.selection.winner_id?"winner":"";const values=[row.lane_id,...["Q","A","R","I","C"].map(axis=>score(row.axis_results[axis])),row.current_reason_code+(row.current_q_delta!==null?` (${row.current_q_delta})`:""),row.ever_selected?"採用歴あり":"—"];values.forEach((value,index)=>{tr.children[index].textContent=text(value);});}
+function keyedTimeline(decision){let li=state.timelineNodes.get(decision.decision_id);if(!li){li=document.createElement("li");const button=document.createElement("button");button.type="button";button.addEventListener("click",()=>{state.historicalCursor=decision.commit_seq;state.preview=null;loadView(true).catch(showError);});li.append(button);state.timelineNodes.set(decision.decision_id,li);$("#timeline").append(li);}li.hidden=false;li.firstElementChild.textContent=`#${decision.commit_seq} ${decision.reason_code}: ${decision.previous_winner_id||"なし"} → ${decision.winner_after_id||"なし"}`;}
+function imageReady(element,url,token){if(!url){element.removeAttribute("src");return Promise.resolve(false);}if(element.getAttribute("src")!==url)element.src=url;const ready=element.complete&&element.naturalWidth>0?Promise.resolve():element.decode().catch(()=>new Promise((resolve,reject)=>{element.addEventListener("load",resolve,{once:true});element.addEventListener("error",reject,{once:true});}));return ready.then(()=>token===state.renderToken&&element.naturalWidth>0).catch(()=>false);}
+async function postReceipt(view,displayMode,rendered,token,imagesReady){const revision=view.selection.display_revision_id,seq=view.selection.display_revision_seq;if(!revision||seq===null||!rendered||!imagesReady||token!==state.renderToken)return;const key=`${revision}|${displayMode}|${rendered}`;if(state.receiptKeys.has(key)||state.receiptInFlight.has(key))return;state.receiptInFlight.add(key);const body={receipt_id:"receipt_"+crypto.randomUUID().replaceAll("-",""),view_session_id:state.viewSession,source_revision_id:revision,source_commit_seq:seq,run_id:view.run_id,frame_id:view.frame_id,generation:view.generation,display_mode:displayMode,rendered_candidate_id:rendered,visible:document.visibilityState==="visible",skipped_revision_ids:[]};try{for(let attempt=0;attempt<2;attempt++){if(token!==state.renderToken)return;try{const response=await fetch("/api/sc01/receipts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});if(response.ok){state.receiptKeys.add(key);document.body.dataset.receipt="accepted";return;}}catch(error){if(attempt===1)document.body.dataset.receipt="failed";}}}finally{state.receiptInFlight.delete(key);}}
+function render(view){const token=++state.renderToken,historical=state.historicalCursor!==null;$("#meta").textContent=`run ${view.run_id} / frame ${view.frame_id} / Evidence E${view.evidence_version} / ${view.run_status} / coverage ${view.coverage_state} / seq ${view.snapshot_seq}${historical?" / 過去表示":""}`;view.rows.forEach(row=>{keyedLane(row);keyedRow(row,view);});state.timelineNodes.forEach(node=>{node.hidden=true;});view.timeline_page.decisions.forEach(keyedTimeline);const rendered=view.preview.rendered_candidate_id,row=view.rows.find(item=>item.candidate_id===rendered),mode=historical?"HISTORICAL_REPLAY":view.preview.display_mode;$("#preview-state").textContent=mode==="MANUAL_CANDIDATE"?`手動閲覧: ${rendered}（主採用は変更しません）`:mode==="HISTORICAL_REPLAY"?`過去時点 #${state.historicalCursor}: ${rendered||"採用なし"}`:`主採用を追従: ${rendered||"採用なし"}${view.selection.stale_fallback_id?"（旧根拠 fallback）":""}`;const keyReady=imageReady($("#keyframe-image"),artifactUrl(view.preview.keyframe_artifact_ref),token),mainReady=imageReady($("#main-image"),row?.thumbnail_ref?artifactUrl(row.thumbnail_ref):"",token);Promise.all([keyReady,mainReady]).then(results=>postReceipt(view,mode,rendered,token,results.every(Boolean)));const q=view.queues[0];$("#queues").textContent=`${q.health} / ${q.congestion} / 単位 ${q.unit} / 範囲 ${q.scope_kind} / 待機 ${q.queued} / 実行 ${q.active} / 完了 ${q.succeeded_total} / 最古待機 ${q.oldest_queued_ms??"—"} ms`;}
+async function control(path,action){state.operation+=1;const response=await fetch(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action})});if(!response.ok)throw new Error(`control_${response.status}`);state.historicalCursor=null;await loadView(false);}
+$("#release").addEventListener("click",()=>control("/api/sc01/fixture/release","release_next").catch(showError));
+$("#evidence").addEventListener("click",()=>control("/api/sc01/fixture/evidence","publish_e1").catch(showError));
+$("#release-e1").addEventListener("click",()=>control("/api/sc01/fixture/evidence","release_next_e1").catch(showError));
+$("#follow").addEventListener("click",()=>{state.preview=null;state.historicalCursor=null;loadView(true).catch(showError);});
+$("#current").addEventListener("click",()=>{state.historicalCursor=null;loadView(true).catch(showError);});
+loadView(true).catch(showError);

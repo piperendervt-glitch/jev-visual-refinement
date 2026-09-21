@@ -583,3 +583,11 @@ def build_demo(kernel: FixtureKernel) -> str:
     for lane in ("A", "S", "B"):
         kernel.accept_evaluation(frame, lane, 0, values[lane], event_id=f"evalevent_{lane.lower()}_e0")
     return frame
+
+# SC01 repair implementation. The original v1 remains in Git history and above
+# for review provenance; public imports use the repaired store and validators.
+from .repair import (  # noqa: E402,F401
+    ArtifactRegistry, FixtureKernel, FixtureProfile, SCHEMA_VERSION,
+    build_demo, canonical_json, content_digest, normalize_decimal,
+    prepare_live_demo, release_demo_step,
+)

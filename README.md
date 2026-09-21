@@ -10,6 +10,7 @@
 - 来歴: `docs/visual_refinement/SOURCE_BASELINE.json`、`COPY_MANIFEST.json`
 - 引継ぎ: `docs/visual_refinement/HANDOFF_STATE_JA.md`
 - SC01 実装報告・profile・CF表・最新引継ぎ: `docs/visual_refinement/sc01/`
+- SC01 統合レビュー修復の現行報告: `docs/visual_refinement/sc01/repair_01/SC01_REPAIR_REPORT_JA.md`
 
 SC01 専用試験とfixture UI:
 

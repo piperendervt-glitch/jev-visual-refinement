@@ -1,0 +1,33 @@
+# SC01 repair_01 引継ぎ
+
+- 状態: `SC01_IMPLEMENTED_PENDING_USER_REVIEW`。
+- 後段: `SC02_NOT_STARTED`。
+- branch: `sc01/async-selection-core`。
+- 開始HEAD: `4981ac914e23b54be54ba8a65a9adfdb9434f10e`。
+- 修復契約: v0.5、store物理版: `vr_sc01_store_v2`。
+- 核: `src/visual_refinement_sc01/repair.py`。
+- HTTP: `src/visual_refinement_sc01/server_v2.py`。
+- 通常入口: `python -B -m visual_refinement_sc01`。
+- 保存閲覧入口: 同上 `--open-existing`。
+- UI: `ui/visual_refinement_sc01/`。
+- SR01〜SR16: 解消判定。詳細は `REVIEW_RESOLUTION.json`。
+- CF01〜CF36: 各期待値PASS。詳細は `CF_COVERAGE.json`。
+- 専用suite: 44件、失敗0、error 0、skip 0。
+- JavaScript構文検査: PASS。
+- 実ブラウザー: Chromeで更新中A→S、B閲覧維持、E1 fallback、過去cursorを確認。
+- receipt: 画像503時は未送信、回復後のみ1件増加を確認。
+- 保存復元: bootstrap/自動retryなしでCLOSED_PARTIALを再表示。
+- 通常停止: 2回ともloop/thread/listenerを正常終了。
+- 保存累計: 4 run directory、24 file、744,014 bytes。
+- 上限: 20 run / 256MiB、保持7日。
+- 今回run: `runs/sc01-repair-browser-20260922`。
+- 最終確認run: `runs/sc01-repair-browser-final-20260922`。
+- 未完了C/jobを成功へ偽装せず、最終確認runはTERMINAL_PARTIAL。
+- 入力原本3点は `repair_01/source/` にhash一致で保存。
+- 旧run、旧receipt、旧SC01報告は不変。
+- `.env` は未読・未hash・未変更・非配信。
+- 母repoは未変更。
+- 実動画/GPU/Jev/model/依存取得/外部API/GitHub/CI/pushは0。
+- 実通信は所有loopbackのみ。
+- 最終commit hashは循環記載せず提出応答を正とする。
+- 次の実行依頼文は作成していない。
