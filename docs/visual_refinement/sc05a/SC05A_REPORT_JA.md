@@ -1,6 +1,6 @@
 # SC05A UI整合 結果
 
-状態：`SC05A_UI_IMPLEMENTED_PENDING_USER_REVIEW`。作業branch `sc05a/reference-ui`。対象は新repoのSC05A fixture UIだけで、元repo・既存`.env`・v0.5原本・旧報告は変更していない。旧runの現在のreceipt件数は15件（旧報告は11件）。直前の利用者依頼によるSC01修復画面の再撮影・閲覧で増えた可能性があり、旧DBを巻き戻していない。SC05A実装作業では旧runを再起動していない。
+状態：`SC05A_UI_IMPLEMENTED_PENDING_USER_REVIEW`。作業branch `sc05a/reference-ui`。対象は新repoのSC05A fixture UIだけで、元repo・既存`.env`・v0.5原本・旧報告は変更していない。旧runの現在のreceipt件数は15件（旧報告は11件）。読取り確認で追加分のrowid 12〜14は同一の画面閲覧sessionによる主採用・過去・手動表示、rowid 15は別sessionの主採用表示と判明し、直前のSC01修復画面の再撮影・閲覧に対応する。event件数は31件のまま。旧DBを巻き戻していない。SC05A実装作業では旧runを再起動していない。
 
 実装：左フレーム／情報、同じKからの独立4lane、各laneの正規化・測定、fixture評価とQ選抜、公開`architecture_label`の構成列を含むQ/A/R/I/C横棒表、4候補手動プレビュー、横向きDecision・根拠更新タイムライン、処理ログとqueue状態を同じ画面に配置。Qだけを選抜軸とし、Aは高いほど曖昧さ・矛盾が大。nullを0点化せず、現在採用・非採用・以前採用・旧根拠・過去cursorを分離。実モデル・実Jev・実GPUは未接続と常設表示。
 
