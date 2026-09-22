@@ -3,24 +3,55 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Jev Visual Refinement — SC01 Fixture</title>
+  <title>Jev Visual Refinement — SC05A Fixture</title>
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/preview.css">
 </head>
 <body>
-<header><div><b>Jev Visual Refinement</b><span>非同期選択・証拠更新</span></div><strong>FIXTURE</strong></header>
-<main>
-  <section class="panel pipeline">
-    <h1>固定 lane・処理状態</h1><div class="meta" id="meta"></div>
-    <div class="controls"><button id="release" type="button">E0を1件完了</button><button id="evidence" type="button">新根拠 E1</button><button id="release-e1" type="button">E1を1件完了</button><button id="current" type="button">現在へ戻る</button></div>
-    <div id="lanes"></div>
+<header class="app-header">
+  <div class="brand"><span class="brand-mark" aria-hidden="true">◆</span><b>Jev Visual Refinement</b><span class="subtitle">領域分割の比較・選抜アプリ</span><span class="version">SC05A</span></div>
+  <div class="header-status"><span id="run-badge">fixture run</span><strong>FIXTURE / 実GPU未使用 / 実Jev未接続</strong></div>
+</header>
+<main class="dashboard">
+  <section class="panel frame-view" aria-labelledby="frame-title">
+    <h1 id="frame-title"><span class="icon">▣</span> 動画・フレームビュー</h1>
+    <div class="frame-picker">フレーム <b>K / frame_k0</b><span id="frame-evidence">E0</span></div>
+    <div class="frame-canvas"><img id="keyframe-image" alt="fixtureの合成キーフレーム"><span class="image-stamp">合成K・実動画未接続</span></div>
+    <div class="playback"><button type="button" disabled title="SC02で接続">◀</button><button type="button" disabled title="SC02で接続">▶</button><span class="fake-scrub" aria-label="実動画再生は未接続"><i></i></span><span>SC02で接続</span></div>
+    <div class="frame-actions"><span>表示</span><button id="follow" type="button">採用結果へ戻る</button><span id="preview-state" aria-live="polite"></span></div>
   </section>
-  <section class="panel preview"><h1>キーフレーム・mask</h1><div class="image-pair"><figure><img id="keyframe-image" alt="synthetic keyframe"><figcaption>合成キーフレーム</figcaption></figure><figure><img id="main-image" alt="fixture mask preview"><figcaption>fixture mask</figcaption></figure></div><div id="preview-state" aria-live="polite"></div><button id="follow" type="button">主採用を追従</button></section>
-  <section class="panel matrix"><h1>評価マトリクス <small>Q＝主採用軸</small></h1><table><thead><tr><th>lane</th><th>Q 主</th><th>A 安定</th><th>R 解決</th><th>I 一貫</th><th>C コスト</th><th>現在判定</th><th>履歴</th></tr></thead><tbody id="matrix"></tbody></table></section>
-  <section class="panel timeline"><h1>選択履歴（commit順）</h1><ol id="timeline"></ol></section>
-  <section class="panel queue"><h1>queue</h1><div id="queues"></div><p>単位は evaluation suite。mask数やHTTP試行数とは分離しています。</p></section>
+
+  <section class="panel frame-info" aria-labelledby="info-title">
+    <h1 id="info-title"><span class="icon">♧</span> フレーム情報</h1>
+    <dl class="info-grid"><dt>入力</dt><dd>合成キーフレーム K</dd><dt>時刻 (PTS)</dt><dd>0 / fixture</dd><dt>フレームID</dt><dd id="frame-id">frame_k0</dd><dt>根拠</dt><dd id="info-evidence">E0</dd><dt>run / 状態</dt><dd id="info-run">—</dd></dl>
+    <div class="neighbor-title">前後フレーム <span>SC02で接続 / 未接続</span></div>
+    <div class="neighbors"><span>前 K —</span><span class="neighbor-current">K / 合成</span><span>次 K —</span></div>
+    <details class="fixture-tools"><summary>fixture検証操作</summary><div class="controls"><button id="release" type="button">E0を1件完了</button><button id="evidence" type="button">新根拠 E1</button><button id="release-e1" type="button">E1を1件完了</button><button id="current" type="button">現在へ戻る</button></div></details>
+  </section>
+
+  <section class="panel pipeline" aria-labelledby="pipeline-title">
+    <div class="panel-heading"><div><h1 id="pipeline-title"><span class="icon">▦</span> 画像処理パイプライン模式図</h1><p>同一Kから4レーンへ独立分岐。各出口を正規化・測定し、fixture評価と選抜へ。</p></div><div class="legend"><span>● 遷移</span><span class="running">● 処理中</span><span class="done">● 完了</span><span class="waiting">● 待機</span></div></div>
+    <div class="pipe-body">
+      <div class="pipe-source"><div class="stage-number">1 <span>キーフレーム取得</span></div><img id="pipe-keyframe" alt="同じ合成K"><div>合成K / frame_k0</div><span class="success-mark">✓ 公開済み</span></div>
+      <div id="lanes" class="pipe-lanes" aria-label="4本の独立レーン"></div>
+      <div class="pipe-jev"><div class="stage-number">2 <span>fixture評価</span></div><div class="jev-logo">✦ <b>Jev</b><small>未接続</small></div><div class="jev-list">Q 分割適合性<br>A 曖昧さ・矛盾 ↑<br>R 解決見込み<br>I 観測重要性<br>C コスト適合</div><div id="queue-compact" class="queue-compact"></div></div>
+      <div class="pipe-select"><div class="stage-number">3 <span>選抜・表示</span></div><p>Qを主軸に暫定採用</p><div class="select-image"><img id="main-image" alt="閲覧中のfixture候補mask"><span id="main-placeholder">未選択</span><button id="retry-image" type="button" hidden>画像を再試行</button></div><div id="winner-card" class="winner-card">採用待ち</div><div id="selection-note" class="selection-note"></div></div>
+    </div>
+    <div class="pipeline-footer"><span id="flow-note">白ドットは記録された遷移時のみ0.5秒表示</span><span id="meta"></span></div>
+  </section>
+
+  <section class="panel matrix" aria-labelledby="matrix-title">
+    <div class="panel-heading"><h1 id="matrix-title"><span class="icon">♟</span> Jev評価結果一覧 <small>現在フレーム / Qのみ主採用軸</small></h1><span>Aは高いほど曖昧さ・矛盾が大</span></div>
+    <div class="table-wrap"><table><thead><tr><th>レーン</th><th>構成（fixture）</th><th>mask</th><th>Q 分割適合性</th><th>A 曖昧さ ↑</th><th>R 解決見込み</th><th>I 重要性</th><th>C コスト適合</th><th>判定</th><th>理由（現在）</th></tr></thead><tbody id="matrix"></tbody></table></div>
+  </section>
+
+  <div class="bottom-panels">
+    <section class="panel thumbnails" aria-labelledby="thumb-title"><h1 id="thumb-title"><span class="icon">▣</span> マスク結果プレビュー</h1><div id="thumbs" class="thumb-grid"></div></section>
+    <section class="panel timeline" aria-labelledby="timeline-title"><div class="panel-heading"><h1 id="timeline-title"><span class="icon">▤</span> 選抜タイムライン</h1><span id="timeline-mode">現在</span></div><div id="timeline" class="timeline-strip" aria-label="commit順の横向きタイムライン"></div><div id="timeline-summary" class="timeline-summary"></div></section>
+    <section class="panel log-panel" aria-labelledby="log-title"><div class="panel-heading"><h1 id="log-title"><span class="icon">♟</span> 処理ログ / イベント</h1><span id="queue-state"></span></div><div id="queues" class="queue-detail"></div><div id="log" class="event-log" aria-live="off"></div></section>
+  </div>
 </main>
-<template id="lane-template"><button class="lane" type="button"><span class="lane-name"></span><span class="lane-stage"></span><span class="lane-queue"></span></button></template>
+<template id="lane-template"><button class="pipe-lane" type="button"><span class="lane-heading"><b class="lane-letter"></b><span class="lane-name"></span><small class="lane-origin">fixture・モデル未実行</small><span class="lane-queue"></span></span><span class="lane-process"><span>前処理</span><i>➜</i><span>候補生成</span><i>➜</i><span>mask</span><i>➜</i><span>正規化・測定</span></span><span class="lane-tail"><img class="lane-img" alt=""><span class="lane-stage"></span></span><span class="pulse-track" aria-hidden="true"></span></button></template>
 <script src="/app.js"></script>
 </body>
 </html>

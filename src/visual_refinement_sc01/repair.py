@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from decimal import Decimal, InvalidOperation, localcontext
 from hashlib import sha256
 import json
@@ -238,6 +238,9 @@ class FixtureKernel:
                 self._bootstrap()
             else:
                 self._validate_store()
+                saved_capacity=self.db.execute("SELECT value FROM meta WHERE key='queue_capacity'").fetchone()
+                if saved_capacity:
+                    self.profile=replace(self.profile,queue_capacity=int(saved_capacity[0]))
                 self.artifacts = ArtifactRegistry(Path(self._meta("artifact_root")), run_id,
                     retention_now=retention_now, max_bytes=self.profile.max_bytes)
                 for item in self._records("artifact"):
@@ -273,6 +276,7 @@ class FixtureKernel:
             ("run_status", "CREATED"), ("created_retention_time", str(self.retention_now)),
             ("expires_at", str(self.retention_now + self.profile.retention_seconds)),
             ("artifact_root", ""), ("fixture_now_ms", str(self.fixture_now_ms)),
+            ("queue_capacity", str(self.profile.queue_capacity)),
             ("network_calls", "0"), ("automatic_retries", "0")])
 
     def _validate_store(self) -> None:
@@ -576,7 +580,21 @@ class FixtureKernel:
         rows=self.db.execute("SELECT * FROM jobs WHERE frame_id=? AND unit=?",(frame_id,unit)).fetchall();count=lambda s:sum(r["status"]==s for r in rows);queued=count("QUEUED");active=count("RUNNING");qrows=[r for r in rows if r["status"]=="QUEUED"];arows=[r for r in rows if r["status"]=="RUNNING"];oldest=None if not qrows else self.fixture_now_ms-min(r["queued_ms"] for r in qrows);longest=None if not arows else self.fixture_now_ms-min(r["started_ms"] for r in arows);rejected=sum(not r["accepted"] for r in rows);congestion="NORMAL" if queued==0 else "ATTENTION"
         if queued and (queued/self.profile.queue_capacity>=.75 or (oldest or 0)>=5000):congestion="CONGESTED"
         if queued>=self.profile.queue_capacity:congestion="SATURATED"
-        return {"queue_id":"fixture_eval","run_id":self.run_id,"frame_id":frame_id,"unit":unit,"scope_kind":"FRAME","capacity":self.profile.queue_capacity,"concurrency_limit":self.profile.evaluator_concurrency,"not_ready":count("WAITING_DEPENDENCY"),"queued":queued,"active":active,"retry_delayed":count("RETRY_DELAY"),"succeeded_total":count("SUCCEEDED"),"failed_total":count("FAILED"),"cancelled_total":count("CANCELLED"),"expired_total":count("EXPIRED"),"rejected_total":rejected,"oldest_queued_ms":oldest,"longest_active_ms":longest,"last_sampled_at":self.fixture_now_ms,"health":"OK","congestion":congestion,"accepted_total":sum(r["accepted"] for r in rows)}
+        return {"queue_id":"fixture_eval","run_id":self.run_id,"frame_id":frame_id,"generation":0,"stage":"EVALUATION","lane_id":None,"unit":unit,"scope_kind":"FRAME","capacity":self.profile.queue_capacity,"concurrency_limit":self.profile.evaluator_concurrency,"not_ready":count("WAITING_DEPENDENCY"),"queued":queued,"active":active,"retry_delayed":count("RETRY_DELAY"),"succeeded_total":count("SUCCEEDED"),"failed_total":count("FAILED"),"cancelled_total":count("CANCELLED"),"expired_total":count("EXPIRED"),"rejected_total":rejected,"active_waiting_reason_counts":{},"oldest_queued_ms":oldest,"longest_active_ms":longest,"last_sampled_at":self.fixture_now_ms,"health":"OK","congestion":congestion,"threshold_profile_ref":"queue_visual_fixture_v1","accepted_total":sum(r["accepted"] for r in rows)}
+
+    def _flow_pulses(self,frame_id:str)->list[dict[str,Any]]:
+        """Bounded, event-bound visual transitions; never a synthetic running indicator."""
+        edges={"CandidatePublished":("K_BRANCH","LANE_MASK"),
+               "JobStarted":("EVALUATION_QUEUE","FIXTURE_EVALUATOR"),
+               "MeasurementsCommitted":("LANE_MASK","COMMON_MEASUREMENT"),
+               "EvaluationAttemptFinished":("FIXTURE_EVALUATOR","SELECTION")}
+        rows=self.db.execute("SELECT event_id,event_type,lane_id FROM events WHERE frame_id=? AND lane_id IS NOT NULL AND event_type IN ('CandidatePublished','JobStarted','MeasurementsCommitted','EvaluationAttemptFinished') ORDER BY commit_seq DESC LIMIT 32",(frame_id,)).fetchall()
+        return [{"pulse_id":f"pulse_{r['event_id']}","event_id":r["event_id"],
+                 "edge_id":f"{r['lane_id']}_{r['event_type']}","source_node":edges[r["event_type"]][0],
+                 "target_node":edges[r["event_type"]][1],"run_id":self.run_id,"frame_id":frame_id,
+                 "candidate_id":f"cand_{frame_id}_{r['lane_id'].lower()}","lane_id":r["lane_id"],
+                 "phase":r["event_type"],"duration_ms":500,"origin":"FIXTURE"}
+                for r in reversed(rows)]
 
     def _build_view(self,frame_id:str,preview_candidate:str|None=None)->dict[str,Any]:
         state=self.db.execute("SELECT * FROM selection_state WHERE frame_id=?",(frame_id,)).fetchone();frow=self.db.execute("SELECT payload FROM records WHERE kind='frame' AND id=?",(frame_id,)).fetchone()
@@ -597,10 +615,12 @@ class FixtureKernel:
             elif selected_q:
                 delta=decimal_delta(q["score_decimal"],selected_q["score_decimal"]);selection="ELIGIBLE_NOT_SELECTED";reason="TIE_KEEP_CURRENT" if delta=="0" else "LOWER_Q"
             else:selection,reason="ELIGIBLE_NOT_SELECTED","NO_CURRENT_WINNER"
-            rows.append({"lane_id":lane,"architecture_label":f"Fixture lane {lane}","candidate_id":c["candidate_id"] if c else None,"generation_status":c["output_status"] if c else "NOT_STARTED","evaluation_status":task["status"] if task else "NOT_READY","selection_status":selection,"axis_results":axes,"current_q_delta":delta,"current_reason_code":reason,"ever_selected":bool(c and c["candidate_id"] in ever),"thumbnail_ref":c["display_artifact_ref"] if c else None,"mask_count":c["mask_count"] if c else None,"evidence_version":state["evidence_version"],"source_origin":"FIXTURE"})
+            lane_jobs=self.db.execute("SELECT status FROM jobs WHERE frame_id=? AND lane_id=? AND unit='EVALUATION_SUITE'",(frame_id,lane)).fetchall()
+            lane_queue={"stage":"EVALUATION","lane_id":lane,"unit":"EVALUATION_SUITE","queued":sum(j[0]=="QUEUED" for j in lane_jobs),"active":sum(j[0]=="RUNNING" for j in lane_jobs)}
+            rows.append({"lane_id":lane,"architecture_label":f"Fixture lane {lane}","candidate_id":c["candidate_id"] if c else None,"generation_status":c["output_status"] if c else "NOT_STARTED","evaluation_status":task["status"] if task else "NOT_READY","selection_status":selection,"axis_results":axes,"current_q_delta":delta,"current_reason_code":reason,"ever_selected":bool(c and c["candidate_id"] in ever),"thumbnail_ref":c["display_artifact_ref"] if c else None,"mask_count":c["mask_count"] if c else None,"evidence_version":state["evidence_version"],"source_origin":"FIXTURE","queue":lane_queue})
         revisions=[dict(r) for r in self.db.execute("SELECT * FROM revisions WHERE frame_id=? ORDER BY commit_seq",(frame_id,))];decisions=[dict(r) for r in self.db.execute("SELECT * FROM decisions WHERE frame_id=? ORDER BY commit_seq",(frame_id,))];rendered=preview_candidate or state["winner_id"] or state["stale_fallback_id"];mode="MANUAL_CANDIDATE" if preview_candidate else "FOLLOW_SELECTION";rseq=None
         if state["display_revision_id"]:rseq=self.db.execute("SELECT commit_seq FROM revisions WHERE revision_id=?",(state["display_revision_id"],)).fetchone()[0]
-        return {"view_id":f"view_{frame_id}","schema_version":SCHEMA_VERSION,"run_id":self.run_id,"run_status":self._meta("run_status"),"frame_id":frame_id,"generation":state["generation"],"current_comparison_ref":f"ctx_{frame_id}_e{state['evidence_version']}","evidence_version":state["evidence_version"],"snapshot_seq":state["latest_seq"],"delivery_mode":"ORIGINAL","rows":rows,"selection":{"winner_id":state["winner_id"],"stale_fallback_id":state["stale_fallback_id"],"display_revision_id":state["display_revision_id"],"display_revision_seq":rseq,"status":"STALE_EVIDENCE_PROVISIONAL" if state["winner_id"] is None and state["stale_fallback_id"] else ("CURRENT_PROVISIONAL" if state["winner_id"] else "NO_SELECTION")},"preview":{"display_mode":mode,"rendered_candidate_id":rendered,"manual_candidate_id":preview_candidate,"keyframe_artifact_ref":frame["frame_artifact_ref"]},"timeline_page":{"decisions":decisions,"revisions":revisions},"queues":[self.queue_snapshot(frame_id)],"flow_pulses":[],"coverage_state":state["coverage_state"],"unavailable_refs":[],"fixture":True,"network_calls":int(self._meta("network_calls"))}
+        return {"view_id":f"view_{frame_id}","schema_version":SCHEMA_VERSION,"run_id":self.run_id,"run_status":self._meta("run_status"),"frame_id":frame_id,"generation":state["generation"],"current_comparison_ref":f"ctx_{frame_id}_e{state['evidence_version']}","evidence_version":state["evidence_version"],"snapshot_seq":state["latest_seq"],"delivery_mode":"ORIGINAL","rows":rows,"selection":{"winner_id":state["winner_id"],"stale_fallback_id":state["stale_fallback_id"],"display_revision_id":state["display_revision_id"],"display_revision_seq":rseq,"status":"STALE_EVIDENCE_PROVISIONAL" if state["winner_id"] is None and state["stale_fallback_id"] else ("CURRENT_PROVISIONAL" if state["winner_id"] else "NO_SELECTION")},"preview":{"display_mode":mode,"rendered_candidate_id":rendered,"manual_candidate_id":preview_candidate,"keyframe_artifact_ref":frame["frame_artifact_ref"]},"timeline_page":{"decisions":decisions,"revisions":revisions},"queues":[self.queue_snapshot(frame_id)],"flow_pulses":self._flow_pulses(frame_id),"coverage_state":state["coverage_state"],"unavailable_refs":[],"fixture":True,"network_calls":int(self._meta("network_calls"))}
 
     def view(self,frame_id:str,*,preview_candidate:str|None=None)->dict[str,Any]:
         with self._lock:

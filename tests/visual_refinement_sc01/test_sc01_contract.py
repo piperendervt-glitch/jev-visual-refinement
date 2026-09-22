@@ -171,7 +171,9 @@ class QueueProjectionTests(KernelCase):
         self.kernel.receipt(receipt); self.kernel.receipt(receipt)
         self.assertEqual(len(self.kernel.event_page()["events"]), before)
         self.assertEqual(self.kernel.db.execute("SELECT COUNT(*) FROM receipts").fetchone()[0], 1)
-        self.assertEqual(view["flow_pulses"], [])
+        self.assertEqual(self.kernel.view("frame_k0")["flow_pulses"], view["flow_pulses"])
+        self.assertTrue(all(p["event_id"] in {e["event_id"] for e in self.kernel.event_page()["events"]}
+                            for p in view["flow_pulses"]))
 
 
 class PersistenceBoundaryTests(KernelCase):
