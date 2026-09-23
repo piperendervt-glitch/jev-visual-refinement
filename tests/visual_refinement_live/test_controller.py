@@ -4,6 +4,7 @@ from types import SimpleNamespace
 import time
 
 import numpy as np
+import pytest
 
 from src.visual_refinement_sc02.segmenter import SegmentOutput
 from src.visual_refinement_live import controller as live_controller
@@ -113,3 +114,65 @@ def test_evaluation_budget_stop_preserves_completed_masks_and_e1(tmp_path, monke
                if x["stage"] == "SEGMENTATION")
     assert len([x for x in view["jobs"] if x["error_code"] == "BUDGET_STOP"]) == 4
     assert run.close()["business"] == "PARTIAL_FAILURE"
+
+
+@pytest.mark.parametrize("failure", ("cleanup", "measurement"))
+def test_lane_failure_after_gpu_start_is_terminal_and_accounted(tmp_path, monkeypatch, failure):
+    monkeypatch.setattr(live_store, "RUNS_ROOT", tmp_path / "runs")
+    rgb = np.zeros((8, 8, 3), np.uint8)
+    video = SimpleNamespace(source_id="synthetic", path=Path("synthetic.mp4"),
+                            display_width=8, display_height=8, duration_seconds=3,
+                            byte_count=50, codec="h264")
+    decoded = SimpleNamespace(rgb=rgb, pts=500, time_base_num=1, time_base_den=1000,
+                              actual_seconds=0.5, sample_id="sample",
+                              width=8, height=8, pixel_sha256="a" * 64)
+    monkeypatch.setattr(live_controller, "probe_video", lambda _: video)
+    monkeypatch.setattr(live_controller, "decode_at", lambda _v, _s: decoded)
+
+    class Adapter:
+        torch = None
+
+        def __init__(self, lane):
+            self.provenance = ModelProvenance(lane, "FIXTURE-S", "fixture",
+                                              "a" * 64, 42, "TEST_ONLY", "cuda:0", 1.0)
+
+        def predict(self, _image):
+            mask = np.zeros((1, 8, 8), np.uint8)
+            mask[0, 2:6, 2:6] = 1
+            return SegmentOutput(mask, mask, np.array([[2, 2, 6, 6]], np.float32),
+                                 np.array([0], np.float32), np.array([0.8], np.float32),
+                                 "cuda:0", {"synchronized_predict_total": 1.0})
+
+        def close(self):
+            if failure == "cleanup":
+                raise RuntimeError("fixture_cleanup_failure")
+
+    class Ledger:
+        def __init__(self):
+            self.marked = []
+
+        def reserve_gpu_job(self, **_kwargs):
+            pass
+
+        def mark_gpu_job(self, job_id, duration_ms):
+            self.marked.append((job_id, duration_ms))
+
+    if failure == "measurement":
+        def fail_measure(*_args, **_kwargs):
+            raise RuntimeError("fixture_measurement_failure")
+        monkeypatch.setattr(live_controller, "measure_candidate", fail_measure)
+    ledger = Ledger()
+    run = live_controller.LiveController(
+        video=Path("synthetic.mp4"), run_id="post_gpu_fixture", lanes=("S",),
+        adapter_factory=Adapter, job_ledger=ledger, origin="FIXTURE")
+    run.select(0.5)
+    run.worker.join(timeout=10)
+    view = run.snapshot()
+    segmentation = [x for x in view["jobs"] if x["stage"] == "SEGMENTATION"]
+    assert len(segmentation) == 1
+    assert segmentation[0]["status"] == "FAILED"
+    assert segmentation[0]["error_code"].startswith("RuntimeError:fixture_")
+    assert len(ledger.marked) == 1
+    assert ledger.marked[0][0] == segmentation[0]["id"]
+    assert any(x["kind"] == "LaneFailed" for x in view["events"])
+    assert run.close()["normal"]

@@ -158,6 +158,15 @@ class LiveController:
                     if output is not None:
                         completed[lane] = output
                 except Exception as exc:
+                    job_id = f"seg_{frame_id}_{lane.lower()}"
+                    with self.store.lock:
+                        row = self.store.db.execute(
+                            "SELECT status FROM jobs WHERE id=?", (job_id,)).fetchone()
+                    if row and row[0] == "QUEUED":
+                        self.store.job_state(job_id, "RUNNING", phase="ERROR")
+                    if row and row[0] in {"QUEUED", "RUNNING"}:
+                        self.store.job_state(job_id, "FAILED",
+                                             error_code=f"{type(exc).__name__}:{str(exc)[:120]}")
                     self.failure = f"{type(exc).__name__}:{str(exc)[:160]}"
                     self.store.event("LaneFailed", frame_id, lane,
                                      {"error_type": type(exc).__name__, "error_code": str(exc)[:160]})
@@ -220,11 +229,13 @@ class LiveController:
                                      error_code=f"{type(exc).__name__}:{str(exc)[:120]}")
                 raise
             finally:
-                if adapter is not None:
-                    adapter.close()
-                if self.job_ledger is not None:
-                    self.job_ledger.mark_gpu_job(
-                        job_id, int((time.perf_counter() - began) * 1000))
+                try:
+                    if adapter is not None:
+                        adapter.close()
+                finally:
+                    if self.job_ledger is not None:
+                        self.job_ledger.mark_gpu_job(
+                            job_id, int((time.perf_counter() - began) * 1000))
         if not self._current(generation):
             self.store.job_state(job_id, "CANCELLED", error_code="GENERATION_CLOSED")
             return None
