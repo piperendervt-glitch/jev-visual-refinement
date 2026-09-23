@@ -2,8 +2,9 @@
 
 保存動画の同一キーフレームへ領域分割器を接続し、元フレームへmaskを重畳する研究用アプリの独立repoです。
 
-現行工程: **SC00 → SC01 → SC05A（画面は利用者承認済み）→ SC02（実K・YOLO11n-seg・保存復元を実装済み）→ SC03 → SC04 → SC05B → SC06 → SC07**。SC03以降は未着手、実Jevは未接続です。SC02ではS帯のみ実行し、A/B/CとQ/A/R/I/Cを未実行・未評価として表示します。
+現行工程: **SC00 → SC01 → SC05A（画面は利用者承認済み）→ SC02（実K・YOLO11n-seg・保存復元を実装済み）→ SC03 → SC04 → SC05B → SC06 → SC07**。SC03〜SC07は一つのgoalで継続中です。追加取得と実Jev送信などの一括承認を待ちながら、オフライン実装・fixture試験を進めています。実四本・実Jev・有限実比較は未確認です。SC02の公開基点はS帯のみで、A/B/CとQ/A/R/I/Cを未実行・未評価として表示します。
 
+- SC03〜SC07の短い現行索引: [GOAL_STATE_JA.md](docs/visual_refinement/final_goal/GOAL_STATE_JA.md)（承認待ち・未完了を明記）
 - SC02の短い結果: [SC02_REPORT_JA.md](docs/visual_refinement/sc02/SC02_REPORT_JA.md)（実動画由来の画面証拠はローカルのみ）
 - SC02の承認済み条件・依存lock・AGPL公開方針: `docs/visual_refinement/sc02/`
 - 設計正本: `docs/visual_refinement/source/sc01/JEV_VISUAL_REFINEMENT_DESIGN_v0_5_JA.md`

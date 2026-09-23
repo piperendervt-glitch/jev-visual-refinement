@@ -50,3 +50,6 @@ build/
 
 # SC02 real-video screenshots stay local
 docs/visual_refinement/sc02/evidence/*.png
+# SC03–SC07 private runtime and screenshots
+secrets/
+docs/visual_refinement/final_goal/evidence/*.png

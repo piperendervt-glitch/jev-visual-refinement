@@ -1,0 +1,32 @@
+﻿.experiment-tools{margin-top:8px;color:#d3e7f0}
+.experiment-tools summary{cursor:pointer;font-size:12px;font-weight:700}
+.experiment-tools .controls{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.experiment-tools label{display:flex;gap:4px;align-items:center;font-size:11px}
+.experiment-tools select,.experiment-tools input{max-width:85px;background:#112d3e;color:#eefaff;border:1px solid #4d7588;border-radius:4px;padding:3px}
+#experiment-result{font-size:11px;max-height:70px;overflow:auto;white-space:pre-wrap}
+.score.valid{color:#e8f9ff;background:linear-gradient(90deg,rgba(0,209,255,.35) var(--score-width),transparent var(--score-width));border-radius:4px;padding:3px 5px}
+.score.missing{opacity:.72}
+.pipe-lane.selected{outline:2px solid #87e7ff}
+.pipe-lane.winner{box-shadow:inset 0 0 0 2px #f4cd6a}
+.frame-info:has(.experiment-tools[open]){overflow:visible;z-index:30}
+.experiment-tools[open]{position:relative;z-index:31;width:min(600px,88vw);background:#061b2b;
+  border:1px solid #35b6e2;border-radius:5px;padding:6px;box-shadow:0 8px 20px #000b}
+.experiment-tools fieldset{border:1px solid #2d6689;border-radius:4px;padding:3px 5px;display:flex;
+  flex-wrap:wrap;gap:5px;margin:0}
+.experiment-tools legend{font-size:10px;color:#b2d8ed}
+.experiment-tools .controls button{font-size:11px;padding:4px 6px}
+.experiment-tools input[type=checkbox]{width:13px;height:13px}
+#experiment-result{font-size:11px;max-height:135px;overflow:auto;white-space:pre-wrap;
+  margin-top:4px;color:#e0f3fc}
+#experiment-result p{margin:3px 0}
+.experiment-run{padding:2px;border-bottom:1px solid #214c69}
+.experiment-run a{color:#7ce5ff}
+
+#queues.normal{border-left:3px solid #5cecb4;padding-left:4px}
+#queues.congested{border-left:3px solid #ffb85a;padding-left:4px;color:#ffe0ad}
+#queues.saturated{border-left:3px solid #ff6c77;padding-left:4px;color:#ffd0d5}
+
+#experiment-result details{background:#0b2d45;border:1px solid #285a78;border-radius:3px;
+  padding:3px;margin:3px 0}
+#experiment-result details summary{cursor:pointer;color:#a7e9ff}
+#experiment-result details p{padding-left:7px;border-left:2px solid #2a93c0}
