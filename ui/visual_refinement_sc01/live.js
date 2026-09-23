@@ -131,7 +131,10 @@ function pulse(view){if(state.cursor!==null||!state.pulseSeq){state.pulseSeq=vie
   for(const event of fresh){const lane=event.lane_id||"S",track=$('#lanes .pipe-lane[data-lane="'+lane+'"] .pulse-track');
     if(!track)continue;const dot=document.createElement("span");dot.className="flow-dot";
     dot.dataset.eventId=String(event.seq);track.append(dot);setTimeout(()=>dot.remove(),650);}
-  if(fresh.length)$("#flow-note").textContent="実記録遷移 "+fresh.length+"件 / 各650ms";}
+  if(fresh.length){const fixture=view.experiment?.origin==="FIXTURE"||
+    view.candidates.some(x=>x.origin==="FIXTURE");
+    $("#flow-note").textContent=(fixture?"fixture記録遷移 ":"実記録遷移 ")+
+      fresh.length+"件 / 各650ms";}}
 function queueView(view){const waiting=view.jobs.filter(x=>x.status==="QUEUED");
   const running=view.jobs.filter(x=>x.status==="RUNNING");
   const done=view.jobs.filter(x=>x.status==="SUCCEEDED");
@@ -140,14 +143,16 @@ function queueView(view){const waiting=view.jobs.filter(x=>x.status==="QUEUED");
     Math.min(...waiting.map(x=>x.queued_ms||Date.now())))/1000))+"秒":"—";
   $("#queue-compact").textContent="待機 "+waiting.length+" / 実行 "+running.length+
     " / 完了 "+done.length;
-  const color=waiting.length>=3?"saturated":waiting.length?"congested":"normal";
-  $("#queues").classList.remove("saturated","congested","normal");
+  const color=waiting.length>=3?"saturated":waiting.length===2?"congested":
+    waiting.length===1?"attention":"normal";
+  const label={normal:"通常",attention:"注意",congested:"混雑",saturated:"飽和"}[color];
+  $("#queues").classList.remove("saturated","congested","attention","normal");
   $("#queues").classList.add(color);
   const last=view.events.at(-1)?.at_ms||Date.now();
   $("#queues").dataset.freshnessMs=String(Math.max(0,Date.now()-last));
   $("#queue-state").textContent=failed.length?"保留/失敗 "+failed.length:
     waiting.length?"待機 "+waiting.length:running.length?"実行中 "+running.length:"待機 0";
-  $("#queues").textContent="単位 SEGMENTATION_JOB / EVALUATION_SUITE · 待機 "+waiting.length+
+  $("#queues").textContent="状態 "+label+" / 単位 SEGMENTATION_JOB / EVALUATION_SUITE · 待機 "+waiting.length+
     " · 実行 "+running.length+" · 完了 "+done.length+" · 保留/失敗 "+failed.length+
     " · 最古待機 "+oldest;}
 async function receipt(view,frame,candidate,sourceSeq,mode,token){if(!candidate||!frame||

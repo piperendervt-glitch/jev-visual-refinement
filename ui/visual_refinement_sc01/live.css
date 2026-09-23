@@ -23,6 +23,7 @@
 .experiment-run a{color:#7ce5ff}
 
 #queues.normal{border-left:3px solid #5cecb4;padding-left:4px}
+#queues.attention{border-left:3px solid #e6cf77;padding-left:4px;color:#f4e7b8}
 #queues.congested{border-left:3px solid #ffb85a;padding-left:4px;color:#ffe0ad}
 #queues.saturated{border-left:3px solid #ff6c77;padding-left:4px;color:#ffd0d5}
 

@@ -69,3 +69,40 @@ def test_saved_loopback_view_and_normal_shutdown(tmp_path, monkeypatch):
         server.shutdown()
         server.server_close()
         controller.close()
+
+
+def test_batch_start_uses_selected_k_set_over_saved_default():
+    class BatchStub:
+        def __init__(self):
+            self.started = None
+
+        def k_set(self):
+            return {"seconds": [0.5, 2.0]}
+
+        def start(self, **kwargs):
+            self.started = kwargs
+            return {"batch_id": "fixture_transport", "plan": {"run_count": 1}}
+
+    batch = BatchStub()
+    server = LiveServer(object(), ("127.0.0.1", 0), batch_manager=batch)
+    thread = threading.Thread(target=server.serve_forever, daemon=False)
+    thread.start()
+    base = f"http://127.0.0.1:{server.server_port}"
+    try:
+        request = Request(
+            base + "/api/live/batch/start",
+            data=json.dumps({"profiles": ["S"], "repeats": 1,
+                             "k_seconds": [0.5], "bucket": "VALIDATION"}).encode(),
+            headers={"Content-Type": "application/json", "Origin": base},
+            method="POST")
+        with urlopen(request, timeout=3) as response:
+            assert response.status == 202
+            assert json.load(response)["batch_id"] == "fixture_transport"
+        assert batch.started == {
+            "profiles": ("S",), "repeats": 1,
+            "k_seconds": (0.5,), "bucket": "VALIDATION"}
+    finally:
+        server.shutdown()
+        thread.join(timeout=5)
+        assert not thread.is_alive()
+        server.server_close()

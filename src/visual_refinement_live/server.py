@@ -139,7 +139,7 @@ class LiveHandler(SC02Handler):
                 with self.server.operation_lock:
                     started = self.server.batch_manager.start(
                         profiles=profiles, repeats=repeats,
-                        k_seconds=tuple(self.server.batch_manager.k_set()["seconds"]),
+                        k_seconds=tuple(k_seconds),
                         bucket=bucket)
                 return self._json(started, 202)
             if self.path == "/api/live/batch/stop":
