@@ -53,7 +53,7 @@ function renderLane(lane,candidate,view,frame,winner){const node=nodeForLane(lan
   setImage(node.querySelector(".lane-img"),candidate?.preview_artifact_id);
   node.querySelector(".lane-img").alt=candidate?(lane+"帯の元K"+(candidate.origin==="REAL_MODEL"?"実mask":"fixture mask")+"重畳"):"結果待ち";
   node.onclick=()=>{if(candidate){state.manualCandidate=candidate.candidate_id;state.cursor=null;
-    refresh().catch(showError);}};}
+    refresh(true).catch(showError);}};}
 function scoreCell(axis){const span=document.createElement("span");span.className="score missing";
   if(axis?.status==="VALID"){span.className="score valid";const score=Number(axis.score_decimal);
     span.style.setProperty("--score-width",(Math.max(0,Math.min(4,score))*25).toFixed(1)+"%");
@@ -91,7 +91,7 @@ function renderThumbs(byLane,winner){const target=$("#thumbs");
     status.textContent=c?(c.candidate_id===winner?"採用 · ":"非採用/未評価 · ")+
       "mask "+c.mask_count:"実分割待ち";
     button.append(title,img,status);button.onclick=()=>{if(c){state.manualCandidate=c.candidate_id;
-      state.cursor=null;refresh().catch(showError);}};target.append(button);}
+      state.cursor=null;refresh(true).catch(showError);}};target.append(button);}
   if(focused){const next=target.querySelector('.thumb[data-lane="'+focused+'"]');
     if(next&&!next.disabled)next.focus({preventScroll:true});}}
 function renderTimeline(view,frame){const target=$("#timeline"),scrollLeft=target.scrollLeft;
@@ -196,7 +196,7 @@ function render(view){const token=++state.renderToken;const frame=state.hiddenVi
     const button=$(id),neighbor=index<0?null:view.frames[index+offset];
     button.disabled=!neighbor;button.textContent=neighbor?label+" K / "+neighbor.actual_seconds.toFixed(3)+"s":label+" K —";
     button.onclick=neighbor?()=>{state.selectedFrame=neighbor.frame_id;state.manualCandidate=null;
-      state.cursor=null;refresh().catch(showError);}:null;}
+      state.cursor=null;refresh(true).catch(showError);}:null;}
   $("#pipe-k-label").textContent=frame?"元K / 実PTS "+frame.pts:"元K 未選択";
   $("#k-state").textContent=frame?"✓ 元K公開済み":"選択待ち";
   $("#meta").textContent=(frame?.frame_id||"K未選択")+" · seq "+view.snapshot_seq+
@@ -236,11 +236,11 @@ function render(view){const token=++state.renderToken;const frame=state.hiddenVi
     const mode=manual?"MANUAL_CANDIDATE":winner?"FOLLOW_SELECTION":"UNSCORED_PREVIEW";
     receipt(view,frame,displayed,decision?.seq||displayed.seq,mode,token).catch(showError);}
   pulse(view);}
-async function refresh(){const base=savedRun?"/api/live/runs/"+encodeURIComponent(savedRun)+"/snapshot":
+async function refresh(force=false){const base=savedRun?"/api/live/runs/"+encodeURIComponent(savedRun)+"/snapshot":
   "/api/live/snapshot";const path=base+(state.cursor===null?"":"?cursor="+state.cursor);
   const response=await fetch(path,{cache:"no-store"});if(!response.ok)throw new Error("snapshot_"+response.status);
   const view=await response.json();if(state.cursor===null&&view.snapshot_seq<state.lastSeq)return;
-  if(state.cursor===null&&view.snapshot_seq===state.lastSeq){queueView(view);return;}
+  if(!force&&state.cursor===null&&view.snapshot_seq===state.lastSeq){queueView(view);return;}
   if(state.cursor===null)state.lastSeq=view.snapshot_seq;
   document.body.dataset.error="";render(view);}
 $("#play").onclick=()=>$("#player").play().catch(showError);
@@ -256,10 +256,10 @@ $("#analyze").onclick=async()=>{try{const result=await post("/api/live/select",
   state.manualCandidate=null;state.cursor=null;state.hiddenView=false;await refresh();}catch(e){showError(e);}};
 $("#stop-analysis").onclick=async()=>{try{await post("/api/live/analysis-stop",{action:"stop"});await refresh();}
   catch(e){showError(e);}};
-$("#current").onclick=()=>{state.cursor=null;state.manualCandidate=null;state.hiddenView=false;refresh().catch(showError);};
+$("#current").onclick=()=>{state.cursor=null;state.manualCandidate=null;state.hiddenView=false;refresh(true).catch(showError);};
 $("#reset").onclick=()=>{state.cursor=null;state.selectedFrame=null;state.manualCandidate=null;
-  state.hiddenView=true;refresh().catch(showError);};
-$("#retry-image").onclick=()=>{state.imageRetry++;$("#main-image").removeAttribute("src");refresh().catch(showError);};
+  state.hiddenView=true;refresh(true).catch(showError);};
+$("#retry-image").onclick=()=>{state.imageRetry++;$("#main-image").removeAttribute("src");refresh(true).catch(showError);};
 $("#shutdown").onclick=async()=>{try{await post("/api/live/shutdown",{action:"shutdown"});
   $("#preview-state").textContent="正常終了を要求しました";}catch(e){showError(e);}};
 function chosenProfiles(){return [...document.querySelectorAll(".profile-check:checked")].map(x=>x.value);}
