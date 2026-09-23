@@ -69,9 +69,13 @@ def weight_path(lane: str) -> Path:
 
 
 def verify_weight(lane: str, path: Path) -> tuple[str, int]:
-    expected = weight_path(lane).resolve()
+    expected = weight_path(lane).absolute()
+    if (path.absolute() != expected or path.is_symlink() or
+            any(parent.is_symlink() or parent.is_junction()
+                for parent in (expected.parent, expected.parent.parent))):
+        raise ValueError("weight_outside_owned_model_root")
     actual = path.resolve(strict=True)
-    if actual != expected or actual.is_symlink() or not actual.is_file():
+    if actual.parent != expected.parent.resolve(strict=True) or not actual.is_file():
         raise ValueError("weight_outside_owned_model_root")
     size = actual.stat().st_size
     if size <= 0 or size > 256 * 1024 * 1024:
@@ -150,6 +154,9 @@ class YOLOAdapter(_BaseAdapter):
         height, width = rgb.shape[:2]
         if result.orig_shape != (height, width):
             raise ValueError("result_original_shape_mismatch")
+        result_device = str(result.boxes.data.device) if result.boxes is not None else self.device
+        if result_device != "cuda:0":
+            raise RuntimeError("result_not_on_cuda_0")
         native = (result.masks.data.detach().cpu().numpy() if result.masks is not None
                   else np.empty((0, height, width), np.uint8))
         norm_started = time.perf_counter()
