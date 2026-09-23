@@ -121,3 +121,21 @@ def test_registration_refuses_existing_credential(monkeypatch):
     with pytest.raises(secrets.SecretUnavailable, match="^SECRET_UNAVAILABLE$"):
         secrets.WindowsCredentialManager().register_secret("synthetic-test-value")
     assert released == [True]
+
+
+def test_evaluator_never_opens_env_or_secret_files(monkeypatch):
+    provider = FakeProvider("synthetic-test-value")
+    monkeypatch.setattr(jev_client, "SDKTransport", lambda value: object())
+    def no_files(*args, **kwargs):
+        pytest.fail("evaluator attempted a file open")
+    with monkeypatch.context() as patch:
+        patch.setattr("builtins.open", no_files)
+        patch.setattr("pathlib.Path.open", no_files)
+        for origin, kwargs in (("FIXTURE", {"transport": object()}),
+                               ("REAL_JEV", {"secret_provider": provider})):
+            evaluator = jev_client.JevEvaluator(None, None, origin=origin, **kwargs)
+            evaluator.close()
+        with pytest.raises(secrets.SecretUnavailable, match="^SECRET_UNAVAILABLE$"):
+            jev_client.JevEvaluator(None, None, origin="REAL_JEV",
+                                     secret_provider=FakeProvider())
+    assert provider.calls == 1
