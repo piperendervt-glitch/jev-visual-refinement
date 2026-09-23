@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Jev Visual Refinement — SC02 Real Preview</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/sc02.css">
+</head>
+<body class="sc02-real">
+<header class="app-header">
+  <div class="brand"><span class="brand-mark" aria-hidden="true">◆</span><b>Jev Visual Refinement</b><span class="subtitle">領域分割の比較・選抜アプリ</span><span class="version">SC02</span></div>
+  <div class="header-status"><span id="run-badge">real run</span><strong>実動画 / 実segmenter / Jev未接続</strong></div>
+</header>
+<main class="dashboard">
+  <section class="panel frame-view" aria-labelledby="frame-title">
+    <h1 id="frame-title"><span class="icon">▣</span> 動画・フレームビュー</h1>
+    <div class="frame-picker"><label for="video-choice">動画</label><select id="video-choice" aria-label="承認済み動画"></select><span id="frame-evidence">K未選択</span></div>
+    <div class="frame-canvas"><video id="player" src="/api/sc02/video" preload="metadata" playsinline></video><img id="keyframe-image" alt="保存済みキーフレーム" hidden><span class="image-stamp" id="image-stamp">動画現在位置 / 選択Kは結果側に固定</span></div>
+    <div class="playback"><button id="play" type="button" title="再生">▶</button><button id="pause" type="button" title="一時停止">Ⅱ</button><input id="scrub" type="range" min="0" max="1000" value="0" aria-label="動画位置"><span id="time-label">0.00 s</span></div>
+    <div class="frame-actions"><button id="analyze" type="button">この時点を解析</button><button id="stop-analysis" type="button">解析停止</button><span id="preview-state" aria-live="polite">選択Kのみ推論</span></div>
+  </section>
+
+  <section class="panel frame-info" aria-labelledby="info-title">
+    <h1 id="info-title"><span class="icon">♧</span> フレーム情報</h1>
+    <dl class="info-grid"><dt>入力</dt><dd id="source-name">承認済み動画</dd><dt>時刻 (PTS)</dt><dd id="pts">—</dd><dt>フレームID</dt><dd id="frame-id">—</dd><dt>根拠</dt><dd id="info-evidence">未評価 / Jev OFF</dd><dt>run / 状態</dt><dd id="info-run">—</dd></dl>
+    <div class="neighbor-title">選択キーフレーム <span>解析対象は再生位置と独立</span></div>
+    <div class="neighbors"><button id="prev-k" type="button" disabled>前 K —</button><span class="neighbor-current" id="neighbor-current">K 未選択</span><button id="next-k" type="button" disabled>次 K —</button></div>
+    <details class="fixture-tools"><summary>実run操作</summary><div class="controls"><button id="current" type="button">現在の記録へ</button><button id="reset" type="button">解析表示をreset</button><button id="shutdown" type="button">正常終了</button></div></details>
+  </section>
+
+  <section class="panel pipeline" aria-labelledby="pipeline-title">
+    <div class="panel-heading"><div><h1 id="pipeline-title"><span class="icon">▦</span> 画像処理パイプライン模式図</h1><p>同一KからS帯の実maskを生成。A/B/C帯は未実行、Jev評価は未接続。</p></div><div class="legend"><span>● 遷移</span><span class="running">● 処理中</span><span class="done">● 完了</span><span class="waiting">● 待機</span></div></div>
+    <div class="pipe-body">
+      <div class="pipe-source"><div class="stage-number">1 <span>キーフレーム取得</span></div><img id="pipe-keyframe" alt="選択した元K"><div id="pipe-k-label">元K 未選択</div><span class="success-mark" id="k-state">選択待ち</span></div>
+      <div id="lanes" class="pipe-lanes" aria-label="固定4レーン"></div>
+      <div class="pipe-jev"><div class="stage-number">2 <span>実Jev OFF</span></div><div class="jev-logo">✦ <b>Jev</b><small>未接続</small></div><div class="jev-list">Q 分割適合性 —<br>A 曖昧さ・矛盾 —<br>R 解決見込み —<br>I 観測重要性 —<br>C コスト適合 —</div><div id="queue-compact" class="queue-compact"></div></div>
+      <div class="pipe-select"><div class="stage-number">3 <span>未評価プレビュー</span></div><p>選択Kの実maskを表示 / Jev採用なし</p><div class="select-image"><img id="main-image" alt="選択Kの実mask重畳"><span id="main-placeholder">実mask待ち</span><button id="retry-image" type="button" hidden>画像を再試行</button></div><div id="winner-card" class="winner-card">Jev採用なし</div><div id="selection-note" class="selection-note">Q/A/R/I/Cは未評価</div></div>
+    </div>
+    <div class="pipeline-footer"><span id="flow-note">白ドットは実記録の遷移時のみ表示</span><span id="meta"></span></div>
+  </section>
+
+  <section class="panel matrix" aria-labelledby="matrix-title">
+    <div class="panel-heading"><h1 id="matrix-title"><span class="icon">♟</span> Jev評価結果一覧 <small>現在のK / 実Jev OFF</small></h1><span>未評価は0点ではありません</span></div>
+    <div class="table-wrap"><table><thead><tr><th>レーン</th><th>構成</th><th>mask</th><th>Q 分割適合性</th><th>A 曖昧さ ↑</th><th>R 解決見込み</th><th>I 重要性</th><th>C コスト適合</th><th>判定</th><th>理由（現在）</th></tr></thead><tbody id="matrix"></tbody></table></div>
+  </section>
+
+  <div class="bottom-panels">
+    <section class="panel thumbnails" aria-labelledby="thumb-title"><h1 id="thumb-title"><span class="icon">▣</span> マスク結果プレビュー</h1><div id="thumbs" class="thumb-grid"></div></section>
+    <section class="panel timeline" aria-labelledby="timeline-title"><div class="panel-heading"><h1 id="timeline-title"><span class="icon">▤</span> 選抜タイムライン</h1><span id="timeline-mode">現在</span></div><div id="timeline" class="timeline-strip" aria-label="実eventと保存cursor"></div><div id="timeline-summary" class="timeline-summary">Jev採用履歴なし</div></section>
+    <section class="panel log-panel" aria-labelledby="log-title"><div class="panel-heading"><h1 id="log-title"><span class="icon">♟</span> 処理ログ / イベント</h1><span id="queue-state"></span></div><div id="queues" class="queue-detail"></div><div id="log" class="event-log" aria-live="off"></div></section>
+  </div>
+</main>
+<template id="lane-template"><button class="pipe-lane" type="button"><span class="lane-heading"><b class="lane-letter"></b><span class="lane-name"></span><small class="lane-origin"></small><span class="lane-queue"></span></span><span class="lane-process"><span>前処理</span><i>➜</i><span>候補生成</span><i>➜</i><span>mask</span><i>➜</i><span>正規化・測定</span></span><span class="lane-tail"><img class="lane-img" alt=""><span class="lane-stage"></span></span><span class="pulse-track" aria-hidden="true"></span></button></template>
+<script src="/sc02.js"></script>
+</body>
+</html>

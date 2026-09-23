@@ -47,3 +47,6 @@ node_modules/
 dist/
 build/
 
+
+# SC02 real-video screenshots stay local
+docs/visual_refinement/sc02/evidence/*.png
