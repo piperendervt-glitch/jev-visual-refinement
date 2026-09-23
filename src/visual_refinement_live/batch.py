@@ -13,10 +13,11 @@ import uuid
 from .controller import LiveController, SHARED_GPU_PERMIT
 from . import controller as controller_module
 from .experiment import APPROVED_K_SECONDS, PROFILES, define_experiment, estimate
-from .jev_client import JevEvaluator, load_dedicated_key
+from .jev_client import JevEvaluator
 from .ledger import BudgetLedger, MAX_GPU_DURATION_MS
 from .segmenters import MODEL_SPEC
 from .preflight import verify_runtime
+from .secret_store import SecretProvider, SecretUnavailable, WindowsCredentialManager
 from .store import RUNS_ROOT, canonical
 
 MAX_BATCH_SECONDS = 4 * 60 * 60
@@ -27,7 +28,8 @@ class BatchManager:
     """One batch writer; all consumed work remains in a persistent global ledger."""
 
     def __init__(self, video: Path, ledger: BudgetLedger, *, main_controller: LiveController,
-                 origin: str = "REAL", adapter_factory=None, fixture_transport=None):
+                 origin: str = "REAL", adapter_factory=None, fixture_transport=None,
+                 secret_provider: SecretProvider | None = None):
         if origin not in {"REAL", "FIXTURE"}:
             raise ValueError("batch_origin_invalid")
         if origin == "FIXTURE" and (adapter_factory is None or fixture_transport is None):
@@ -37,6 +39,7 @@ class BatchManager:
         self.origin = origin
         self.adapter_factory = adapter_factory
         self.fixture_transport = fixture_transport
+        self.secret_provider = secret_provider if origin == "REAL" else None
         self.video = video
         self.ledger = ledger
         self.main_controller = main_controller
@@ -133,7 +136,7 @@ class BatchManager:
             lanes = tuple(sorted({lane for p in plan["definition"]["profiles"]
                                   for lane in PROFILES[p]}))
             plan["runtime_preflight"] = verify_runtime(lanes, jev=True)
-            load_dedicated_key()
+            (self.secret_provider or WindowsCredentialManager()).get_secret()
         # Only this owned run root is measured. The original video is never copied.
         used = sum(p.stat().st_size for p in RUNS_ROOT.rglob("*") if p.is_file())
         if used + plan["storage_reservation_bytes"] > MAX_STORAGE_BYTES:
@@ -214,7 +217,8 @@ class BatchManager:
                             controller.store, self.ledger, bucket=bucket, plan_id=ident,
                             origin="REAL_JEV" if self.origin == "REAL" else "FIXTURE",
                             **({"transport": self.fixture_transport}
-                               if self.origin == "FIXTURE" else {}),
+                               if self.origin == "FIXTURE" else
+                               {"secret_provider": self.secret_provider}),
                             is_current=lambda fid, c=controller: c.accepting
                             and not c.cancel.is_set()
                             and c.frame_generations.get(fid) == c.generation)
@@ -242,7 +246,7 @@ class BatchManager:
                             failure = run_status
                     except Exception as exc:
                         run_status = "FAILED"
-                        failure = type(exc).__name__
+                        failure = "SECRET_UNAVAILABLE" if isinstance(exc, SecretUnavailable) else type(exc).__name__
                         if controller is not None:
                             try:
                                 controller.stop_analysis()
@@ -259,7 +263,7 @@ class BatchManager:
                 if self.stop_event.is_set() or time.monotonic() - began >= MAX_BATCH_SECONDS:
                     break
         except Exception as exc:
-            failure = type(exc).__name__
+            failure = "SECRET_UNAVAILABLE" if isinstance(exc, SecretUnavailable) else type(exc).__name__
         finally:
             status = ("STOPPED" if self.stop_event.is_set() else
                       "EXPIRED" if time.monotonic() - began >= MAX_BATCH_SECONDS else

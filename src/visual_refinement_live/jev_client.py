@@ -8,29 +8,14 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
 from hashlib import sha256
 import logging
-from pathlib import Path
 import threading
 import time
 
 from .evaluation import SelectionEngine
 from .jev_wire import AXES, MODEL_ID, build_state, request_body
 from .ledger import BudgetLedger, MAX_REQUEST_BYTES
+from .secret_store import SecretProvider, WindowsCredentialManager
 from .store import LiveStore
-
-REPO = Path(__file__).resolve().parents[2]
-KEY_PATH = REPO / "secrets" / "sc03_sc07" / "typesafe_api_key.txt"
-
-
-def load_dedicated_key(path: Path = KEY_PATH) -> str:
-    expected = KEY_PATH.resolve()
-    actual = path.resolve(strict=True)
-    if actual != expected or path.is_symlink() or not path.is_file():
-        raise ValueError("dedicated_key_path_required")
-    key = path.read_text(encoding="utf-8").strip()
-    if not key or any(ord(ch) < 33 or ord(ch) > 126 for ch in key):
-        raise ValueError("dedicated_key_invalid")
-    return key
-
 
 def classify_transport_error(exc: Exception) -> str:
     """Use the SDK's documented status and exception families without logging bodies."""
@@ -72,7 +57,8 @@ class SDKTransport:
 
 class JevEvaluator:
     def __init__(self, store: LiveStore, ledger: BudgetLedger, *,
-                 key_path: Path = KEY_PATH, transport=None, bucket: str = "VALIDATION",
+                 secret_provider: SecretProvider | None = None, transport=None,
+                 bucket: str = "VALIDATION",
                  is_current=None, origin: str = "REAL_JEV",
                  plan_id: str | None = None):
         if origin not in {"REAL_JEV", "FIXTURE"}:
@@ -84,7 +70,14 @@ class JevEvaluator:
         self.bucket = bucket
         self.plan_id = plan_id
         self.is_current = is_current or (lambda frame_id: True)
-        self.transport = transport if transport is not None else SDKTransport(load_dedicated_key(key_path))
+        if transport is None:
+            if origin != "REAL_JEV":
+                raise ValueError("fixture_transport_required")
+            key = (secret_provider or WindowsCredentialManager()).get_secret()
+            self.transport = SDKTransport(key)
+            key = None
+        else:
+            self.transport = transport
         self.executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="jev-eval")
         self.lock = threading.RLock()
         self.circuit_open = False

@@ -8,10 +8,11 @@ import sys
 
 from .batch import BatchManager
 from .controller import LiveController
-from .jev_client import JevEvaluator, load_dedicated_key
+from .jev_client import JevEvaluator, SDKTransport
 from .ledger import BudgetLedger
 from .ownership import WriterLease
 from .preflight import verify_runtime
+from .secret_store import SecretUnavailable, WindowsCredentialManager
 from .server import LiveServer
 from .store import RUNS_ROOT
 
@@ -47,8 +48,15 @@ def main(argv: list[str] | None = None) -> int:
     if args.jev and (profile is None or not profile.get("jev_send_approved")):
         parser.error("Jev transmission requires the approved profile")
     runtime = verify_runtime(LANE_PROFILES[args.profile], jev=args.jev) if args.video else None
-    if args.jev:
-        load_dedicated_key()
+    secret_provider = WindowsCredentialManager() if args.jev else None
+    if secret_provider is not None:
+        try:
+            key = secret_provider.get_secret()
+        except SecretUnavailable:
+            print("SECRET_UNAVAILABLE", file=sys.stderr)
+            return 2
+        transport = SDKTransport(key)
+        key = None
 
     lease = WriterLease() if args.video else None
     ledger = None
@@ -68,11 +76,13 @@ def main(argv: list[str] | None = None) -> int:
             job_ledger=ledger, bucket=args.bucket)
         if args.jev:
             controller.evaluator = JevEvaluator(
-                controller.store, ledger, bucket=args.bucket,
+                controller.store, ledger, bucket=args.bucket, transport=transport,
                 is_current=lambda fid: controller.accepting and
                 not controller.cancel.is_set() and
                 controller.frame_generations.get(fid) == controller.generation)
-        manager = BatchManager(args.video, ledger, main_controller=controller) if (
+            transport = None
+        manager = BatchManager(args.video, ledger, main_controller=controller,
+                               secret_provider=secret_provider) if (
             args.video and profile.get("jev_send_approved")) else None
         server = LiveServer(controller, ("127.0.0.1", args.port), batch_manager=manager)
         print(f"LIVE_READY http://127.0.0.1:{server.server_port}/ run={args.run_id}", flush=True)

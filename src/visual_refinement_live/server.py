@@ -13,6 +13,7 @@ from src.visual_refinement_sc02.server import SC02Handler
 from .controller import LiveController
 from .analysis import analysis_snapshot, compare_runs
 from .store import LiveStore
+from .secret_store import SecretUnavailable
 from .view_sessions import ViewSessionStore
 
 UI_ROOT = Path(__file__).resolve().parents[2] / "ui" / "visual_refinement_sc01"
@@ -187,6 +188,8 @@ class LiveHandler(SC02Handler):
                 threading.Thread(target=self.server.shutdown, name="live-shutdown",
                                  daemon=True).start()
                 return
+        except SecretUnavailable:
+            return self._json({"error": "SECRET_UNAVAILABLE"}, 503)
         except (ValueError, TypeError, json.JSONDecodeError):
             return self._json({"error": "invalid_request"}, 400)
         except TimeoutError:
