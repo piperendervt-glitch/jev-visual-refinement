@@ -280,13 +280,20 @@ class BatchManager:
 
     def status(self) -> dict:
         with self.lock:
-            rows = self.db.execute("""SELECT id,plan_digest,bucket,status,started_ms,
+            rows = self.db.execute("""SELECT id,plan_digest,definition,bucket,status,started_ms,
                 finished_ms,error_code FROM batches ORDER BY started_ms DESC LIMIT 25""").fetchall()
             runs = self.db.execute("""SELECT batch_id,ordinal,run_id,profile,
                 repeat_index,status FROM batch_runs ORDER BY batch_id,ordinal""").fetchall()
+            batches = []
+            for row in rows:
+                item = dict(zip(("batch_id", "plan_digest", "definition", "bucket",
+                                 "status", "started_ms", "finished_ms", "error_code"), row))
+                definition = json.loads(item.pop("definition"))
+                item["planned_run_count"] = (
+                    len(definition.get("profiles", ())) * definition.get("repeats", 0))
+                batches.append(item)
             return {"active_batch_id": self.batch_id if self.worker and self.worker.is_alive() else None,
-                    "batches": [dict(zip(("batch_id","plan_digest","bucket","status",
-                                         "started_ms","finished_ms","error_code"), r)) for r in rows],
+                    "batches": batches,
                     "runs": [dict(zip(("batch_id","ordinal","run_id","profile",
                                       "repeat_index","status"), r)) for r in runs],
                     "ledger": self.ledger.snapshot()}

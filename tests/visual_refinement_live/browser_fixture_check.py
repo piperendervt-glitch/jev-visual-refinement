@@ -66,6 +66,7 @@ class FixtureBatchStub:
         self.seconds = [0.5, 2.0]
         self.planned = None
         self.started = None
+        self.batch_state = None
 
     def k_set(self):
         return {"seconds": self.seconds, "allowed_seconds": [0.5, 2.0]}
@@ -84,12 +85,25 @@ class FixtureBatchStub:
 
     def start(self, *, profiles, repeats, k_seconds, bucket):
         self.started = (profiles, repeats, k_seconds, bucket)
+        self.batch_state = "RUNNING"
         return {"batch_id": "fixture_transport_only",
                 "plan": self.plan(profiles=profiles, repeats=repeats,
                                   k_seconds=k_seconds, bucket=bucket)}
 
+    def finish(self):
+        self.batch_state = "COMPLETE"
+
     def status(self):
-        return {"active_batch_id": None, "batches": [], "runs": []}
+        if self.batch_state is None:
+            return {"active_batch_id": None, "batches": [], "runs": []}
+        return {"active_batch_id": "fixture_transport_only"
+                if self.batch_state == "RUNNING" else None,
+                "batches": [{"batch_id": "fixture_transport_only",
+                             "status": self.batch_state,
+                             "planned_run_count": 1, "error_code": None}],
+                "runs": [{"batch_id": "fixture_transport_only",
+                          "status": "RUNNING" if self.batch_state == "RUNNING"
+                          else "COMPLETE_NONEMPTY"}]}
 
 
 def main() -> None:
@@ -286,7 +300,12 @@ def main() -> None:
                 expect(page.locator("#experiment-result")).to_contain_text(
                     "fixture_transport_only")
                 assert batch_stub.started == (("S",), 1, (0.5,), "VALIDATION")
-                print("BROWSER_FIXTURE batch_plan_start_ui_transport OK")
+                expect(page.locator("#batch-status")).to_contain_text("RUNNING")
+                batch_stub.finish()
+                expect(page.locator("#batch-status")).to_contain_text("COMPLETE",
+                    timeout=4000)
+                expect(page.locator("#batch-status")).to_contain_text("1/1 run")
+                print("BROWSER_FIXTURE batch_plan_start_status_ui_transport OK")
                 timeline = page.locator("#timeline .time-node")
                 assert timeline.count() > 1
                 timeline.first.click()
@@ -320,8 +339,12 @@ def main() -> None:
                 assert not page_errors, f"page_errors:{page_errors}"
                 print("BROWSER_FIXTURE replay_cursor_compare_shutdown OK")
                 page.locator("#shutdown").click()
+                expect(page.locator("#preview-state")).to_contain_text(
+                    "\u6b63\u5e38\u7d42\u4e86")
                 thread.join(timeout=5)
                 assert not thread.is_alive()
+                page.wait_for_timeout(650)
+                assert page.locator("body").get_attribute("data-error") == ""
                 print("BROWSER_FIXTURE ALL_PASS")
             finally:
                 if context is not None:

@@ -1,5 +1,12 @@
 ﻿.experiment-tools{margin-top:8px;color:#d3e7f0}
 .experiment-tools summary{cursor:pointer;font-size:12px;font-weight:700}
+.batch-status{display:inline-block;margin-left:5px;padding:1px 5px;border:1px solid #456c83;
+  border-radius:4px;color:#c5d9e5;font-size:10px;font-weight:500}
+.batch-status[data-status="RUNNING"]{border-color:#38aede;color:#a8e5ff}
+.batch-status[data-status="COMPLETE"]{border-color:#42bb91;color:#adf2d7}
+.batch-status[data-status="PARTIAL_FAILURE"],.batch-status[data-status="FAILED"],
+.batch-status[data-status="STOPPED"],.batch-status[data-status="EXPIRED"]{
+  border-color:#d98368;color:#ffd4c3}
 .experiment-tools .controls{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
 .experiment-tools label{display:flex;gap:4px;align-items:center;font-size:11px}
 .experiment-tools select,.experiment-tools input{max-width:85px;background:#112d3e;color:#eefaff;border:1px solid #4d7588;border-radius:4px;padding:3px}

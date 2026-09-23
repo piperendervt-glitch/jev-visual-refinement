@@ -75,6 +75,7 @@ def test_fixture_batch_consumes_atomic_plan_and_indexes_all_runs(tmp_path, monke
         assert not manager.worker.is_alive()
         status = manager.status()
         assert status["batches"][0]["status"] == "COMPLETE"
+        assert status["batches"][0]["planned_run_count"] == 2
         assert len(status["runs"]) == 2
         assert all(r["status"] == "COMPLETE_NONEMPTY" for r in status["runs"])
         counts = ledger.snapshot()

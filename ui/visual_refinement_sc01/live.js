@@ -8,6 +8,7 @@ const art=id=>(savedRun?"/api/live/runs/"+encodeURIComponent(savedRun):"/api/liv
 const state={session:"live_"+crypto.randomUUID().replaceAll("-",""),selectedFrame:null,
   manualCandidate:null,cursor:null,lastSeq:0,renderToken:0,receiptKeys:new Set(),
   pulseSeq:0,hiddenView:false,imageRetry:0};
+let serviceStopped=false,batchStatusSeq=0;
 const names={S:"YOLO11n-seg",A:"YOLO11s-seg",B:"YOLO11m-seg",C:"Mask R-CNN ResNet50-FPN"};
 const eventNames={RunCreated:"run開始",KeyframeRequested:"K取得要求",DecodeStarted:"動画decode",
   KeyframePublished:"元K公開",ModelLoadStarted:"モデル読込み",ModelLoaded:"モデル読込み完了",
@@ -17,7 +18,7 @@ const eventNames={RunCreated:"run開始",KeyframeRequested:"K取得要求",Decod
   EvaluationTransportFailed:"Jev通信失敗",DecisionCommitted:"採用判断",
   JobQueued:"queue受付",JobStarted:"job開始",JobFinished:"job終了",RunStopped:"run終了"};
 function message(error){return error instanceof Error?error.message:String(error);}
-function showError(error){$("#preview-state").textContent="エラー: "+message(error);document.body.dataset.error=message(error);}
+function showError(error){if(serviceStopped)return;$("#preview-state").textContent="エラー: "+message(error);document.body.dataset.error=message(error);}
 function setImage(img,id){if(!id){img.removeAttribute("src");return;}
   const url=art(id)+(state.imageRetry?"?retry="+state.imageRetry:"");
   if(img.getAttribute("src")!==url)img.src=url;}
@@ -266,7 +267,9 @@ $("#reset").onclick=()=>{state.cursor=null;state.selectedFrame=null;state.manual
   state.hiddenView=true;refresh(true).catch(showError);};
 $("#retry-image").onclick=()=>{state.imageRetry++;$("#main-image").removeAttribute("src");refresh(true).catch(showError);};
 $("#shutdown").onclick=async()=>{try{await post("/api/live/shutdown",{action:"shutdown"});
-  $("#preview-state").textContent="正常終了を要求しました";}catch(e){showError(e);}};
+  serviceStopped=true;batchStatusSeq++;clearInterval(timer);clearInterval(batchTimer);
+  $("#preview-state").textContent="正常終了を要求しました";}
+  catch(e){showError(e);}};
 function chosenProfiles(){return [...document.querySelectorAll(".profile-check:checked")].map(x=>x.value);}
 function chosenK(){return [...document.querySelectorAll(".k-check:checked")].map(x=>Number(x.value));}
 function experimentPayload(){return {profiles:chosenProfiles(),
@@ -276,6 +279,24 @@ function experimentText(value){$("#experiment-result").replaceChildren(
   document.createTextNode(value));}
 async function getJson(path){const r=await fetch(path,{cache:"no-store"});
   if(!r.ok)throw new Error("request_"+r.status);return r.json();}
+function renderBatchStatus(data){const latest=data.batches?.[0],badge=$("#batch-status");
+  let value="batch: 記録なし",status="NONE";
+  if(latest){status=latest.status;
+    const runs=(data.runs||[]).filter(x=>x.batch_id===latest.batch_id);
+    const finished=runs.filter(x=>!["QUEUED","RUNNING"].includes(x.status)).length;
+    const planned=latest.planned_run_count??runs.length;
+    value="batch "+status+" · "+finished+"/"+planned+" run";
+    if(latest.error_code)value+=" · "+latest.error_code;}
+  if(badge.textContent!==value)badge.textContent=value;
+  badge.dataset.status=status;}
+async function refreshBatchStatus(){if(serviceStopped)return;
+  const requestSeq=++batchStatusSeq;
+  try{const data=await getJson("/api/live/batches");
+    if(!serviceStopped&&requestSeq===batchStatusSeq)renderBatchStatus(data);}
+  catch{if(serviceStopped||requestSeq!==batchStatusSeq)return;
+    const badge=$("#batch-status");
+    badge.textContent="batch: 状態取得失敗";
+    badge.dataset.status="UNAVAILABLE";}}
 async function showPlan(){const plan=await post("/api/live/batch/plan",experimentPayload());
   experimentText("計画 "+plan.run_count+" run / 分割 "+plan.segmentation_jobs+
     " job / E0 "+plan.e0_suites+"・E1 "+plan.e1_suites+" suite / HTTP最大 "+
@@ -290,10 +311,11 @@ $("#k-load").onclick=async()=>{try{const data=await getJson("/api/live/k-set");
   experimentText("K集合を読込: "+data.seconds.join(", ")+" 秒");}catch(e){showError(e);}};
 $("#experiment-plan").onclick=()=>showPlan().catch(showError);
 $("#experiment-start").onclick=async()=>{try{const data=await post("/api/live/batch/start",experimentPayload());
-  experimentText(data.batch_id+" 開始 / "+data.plan.run_count+" run を順次実行");}
+  experimentText(data.batch_id+" 開始 / "+data.plan.run_count+" run を順次実行");
+  await refreshBatchStatus();}
   catch(e){showError(e);}};
 $("#experiment-stop").onclick=async()=>{try{await post("/api/live/batch/stop",{action:"stop"});
-  experimentText("batch停止を要求しました");}catch(e){showError(e);}};
+  experimentText("batch停止を要求しました");await refreshBatchStatus();}catch(e){showError(e);}};
 $("#experiment-list").onclick=async()=>{try{const data=await getJson("/api/live/runs");
   const box=$("#experiment-result");box.replaceChildren();
   const heading=document.createElement("p");heading.textContent="保存run "+data.all_target_run_count+
@@ -354,5 +376,9 @@ if(savedRun){$("#player").removeAttribute("src");
   for(const id of ["#k-save","#k-load","#experiment-plan","#experiment-start",
                     "#experiment-stop"])$(id).disabled=true;}
 refresh().catch(showError);
-const timer=setInterval(()=>{if(!document.hidden&&state.cursor===null)refresh().catch(showError);},500);
-window.addEventListener("beforeunload",()=>clearInterval(timer));
+refreshBatchStatus();
+const timer=setInterval(()=>{if(!serviceStopped&&!document.hidden&&state.cursor===null)
+  refresh().catch(showError);},500);
+const batchTimer=setInterval(()=>{if(!serviceStopped&&!document.hidden)
+  refreshBatchStatus();},2000);
+window.addEventListener("beforeunload",()=>{clearInterval(timer);clearInterval(batchTimer);});
