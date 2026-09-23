@@ -304,9 +304,9 @@ $("#experiment-compare").onclick=async()=>{try{const data=await getJson("/api/li
   box=$("#experiment-result");box.replaceChildren();
   const heading=document.createElement("p");heading.textContent="全対象 "+
     data.index.all_target_run_count+" run / 比較可能群 "+data.index.comparable_groups.length+
-    " / 除外 "+data.index.excluded.length+" · 独立品質の正解なし";box.append(heading);
+    " / 除外 "+data.index.excluded.length+" / 未完了 "+data.index.incomplete.length+" · 独立品質の正解なし";box.append(heading);
   for(const group of data.actual_configuration_comparison){const row=document.createElement("p");
-    row.textContent=group.profile+" 実構成 "+group.run_count+" run · 初回採用 "+
+    row.textContent=group.profile+" 実構成 "+group.run_count+" run / 完了 "+group.complete_run_count+" / 未完了 "+group.incomplete_run_count+" · 初回採用 "+
       group.first_adoptions+" · 最終採用 "+group.final_adoptions+
       " · 初mask中央値 "+(group.median_first_mask_ms??"—")+"ms"+
       " · 初採用中央値 "+(group.median_first_adoption_ms??"—")+"ms"+
@@ -339,6 +339,8 @@ $("#experiment-compare").onclick=async()=>{try{const data=await getJson("/api/li
       row.title=[fixedResult.jev_choice_id,fixedResult.fixed_choice_id].join(" / ");
       section.append(row);}
     box.append(section);}
+  for(const incomplete of data.index.incomplete){const row=document.createElement("p");
+    row.textContent="未完了run "+incomplete.run_id+" · "+incomplete.reason;box.append(row);}
   for(const excluded of data.index.excluded){const row=document.createElement("p");
     row.textContent="比較除外 "+excluded.run_id+" · "+excluded.reason;box.append(row);}
 }

@@ -24,6 +24,24 @@ def _run_summary(snapshot: dict) -> dict:
     jobs = snapshot["jobs"]
     experiment = snapshot["experiment"] or {}
     selected = {fid: entry["winner_id"] for fid, entry in snapshot["selection"].items()}
+    profile = experiment.get("profile")
+    expected_lanes = set(PROFILES.get(profile, ()))
+    frame_complete = bool(expected_lanes) and all(
+        len([c for c in candidates if c["frame_id"] == frame["frame_id"]])
+        == len(expected_lanes) and
+        {c["lane_id"] for c in candidates if c["frame_id"] == frame["frame_id"]
+         and c.get("segmentation_status") in {"SUCCEEDED_NONEMPTY", "SUCCEEDED_EMPTY"}}
+        == expected_lanes and
+        all(
+            {e["candidate_id"] for e in evaluations
+             if e["frame_id"] == frame["frame_id"] and e["evidence_version"] == version
+             and e.get("origin") == "REAL_JEV" and e.get("status") == "COMPLETE"}
+            == {c["candidate_id"] for c in candidates
+                if c["frame_id"] == frame["frame_id"]}
+            for version in ((0, 1) if len(expected_lanes) > 1 else (0,))
+        )
+        for frame in frames
+    )
     first = {}
     for d in decisions:
         fid = d["frame_id"]
@@ -65,6 +83,7 @@ def _run_summary(snapshot: dict) -> dict:
              "time_base": f["time_base"], "pixel_sha256": f["pixel_sha256"]}
             for f in frames],
         "frames": len(frames), "candidate_count": len(candidates),
+        "frame_complete": frame_complete,
         "empty_count": sum(c.get("segmentation_status") == "SUCCEEDED_EMPTY" for c in candidates),
         "e0_evaluations": sum(e["evidence_version"] == 0 for e in evaluations),
         "e1_evaluations": sum(e["evidence_version"] == 1 for e in evaluations),
@@ -104,18 +123,48 @@ def analysis_snapshot(root: Path = RUNS_ROOT) -> dict:
                             "reason": type(exc).__name__})
     comparable = defaultdict(list)
     excluded = []
+    incomplete = []
     for entry in entries:
         exp = entry.get("experiment") or {}
-        if (entry.get("schema") != SCHEMA or entry.get("origin") != "REAL" or
-                not exp.get("definition_digest") or
-                entry["lifecycle"] != "SERVICE_STOPPED_NORMAL" or
-                len(entry["frame_signature"]) != len(exp.get("planned_k_seconds", []))):
-            excluded.append({"run_id": entry["run_id"], "reason": "ORIGIN_SCHEMA_OR_COMPLETENESS"})
+        definition = exp.get("definition") or {}
+        planned = definition.get("k_manifest") or []
+        observed = entry.get("frame_signature") or []
+        planned_signatures = [
+            {key: source.get(key) for key in
+             ("requested_seconds", "pts", "time_base", "pixel_sha256")}
+            for source in planned if isinstance(source, dict)]
+        planned_by_second = {item["requested_seconds"]: item for item in planned_signatures}
+        if entry.get("schema") != SCHEMA:
+            reason = "SCHEMA"
+        elif entry.get("origin") != "REAL" or not exp.get("definition_digest"):
+            reason = "ORIGIN_OR_DEFINITION"
+        elif (not planned or len(planned_signatures) != len(planned) or
+              len(planned_by_second) != len(planned_signatures) or
+              list(planned_by_second) != exp.get("planned_k_seconds") or
+              entry.get("source_id") is None):
+            reason = "PLAN_OR_SOURCE_MISSING"
+        elif (len(observed) > len(planned) or
+              len({item.get("requested_seconds") for item in observed}) != len(observed) or
+              any(item != planned_by_second.get(item.get("requested_seconds"))
+                  for item in observed)):
+            reason = "INPUT_FINGERPRINT_MISMATCH"
+        else:
+            reason = None
+        if reason:
+            excluded.append({"run_id": entry["run_id"], "reason": reason})
             continue
+        completion_reason = (
+            "RUN_NOT_COMPLETE" if entry.get("lifecycle") != "SERVICE_STOPPED_NORMAL" or
+            entry.get("business") not in {"COMPLETE_NONEMPTY", "COMPLETE_EMPTY"} else
+            "MISSING_KEYFRAME" if len(observed) != len(planned) else
+            "LANE_OR_EVALUATION_INCOMPLETE" if not entry.get("frame_complete") else None)
+        entry["comparison_complete"] = completion_reason is None
+        if completion_reason:
+            incomplete.append({"run_id": entry["run_id"], "reason": completion_reason})
         common = {
             "task": exp.get("definition", {}).get("task"),
             "source_id": entry["source_id"],
-            "frames": entry["frame_signature"],
+            "frames": planned_signatures,
             "definition_digest": exp["definition_digest"],
             "measurement_profile": exp.get("definition", {}).get("measurement_profile"),
             "rubric_version": exp.get("definition", {}).get("rubric_version"),
@@ -130,7 +179,8 @@ def analysis_snapshot(root: Path = RUNS_ROOT) -> dict:
     return {"version": INDEX_VERSION, "runs": entries,
             "comparable_groups": [{"key": key, "run_ids": ids}
                                   for key, ids in comparable.items()],
-            "excluded": excluded, "all_target_run_count": len(entries)}
+            "excluded": excluded, "incomplete": incomplete,
+            "all_target_run_count": len(entries)}
 
 
 def _policy_comparison(view: dict) -> list[dict]:
@@ -199,6 +249,7 @@ def compare_runs(root: Path = RUNS_ROOT) -> dict:
         finally:
             store.close()
         detail = {"run_id": entry["run_id"],
+                  "comparison_complete": bool(entry.get("comparison_complete")),
                   "saved_policy": _policy_comparison(view),
                   "fixed_evaluator": _fixed_evaluator(view)}
         if entry["run_id"] in group_for_run:
@@ -208,9 +259,9 @@ def compare_runs(root: Path = RUNS_ROOT) -> dict:
     profiles = defaultdict(list)
     for entry in index["runs"]:
         exp = entry.get("experiment") or {}
-        if exp.get("profile") in PROFILES and entry.get("origin") == "REAL":
-            profiles[(group_for_run.get(entry["run_id"], "EXCLUDED"),
-                      exp["profile"])].append(entry)
+        group_key = group_for_run.get(entry["run_id"])
+        if group_key is not None and exp.get("profile") in PROFILES:
+            profiles[(group_key, exp["profile"])].append(entry)
     actual = []
     for (group_key, profile), runs in sorted(profiles.items()):
         first_mask = [x["first_mask_ms"] for r in runs for x in r["frame_latency"]
@@ -221,6 +272,8 @@ def compare_runs(root: Path = RUNS_ROOT) -> dict:
         actual.append({"profile": profile, "comparable_group_key": group_key,
                        "run_ids": [r["run_id"] for r in runs],
                        "run_count": len(runs),
+                       "complete_run_count": sum(bool(r.get("comparison_complete")) for r in runs),
+                       "incomplete_run_count": sum(not r.get("comparison_complete") for r in runs),
                        "median_first_mask_ms": median(first_mask) if first_mask else None,
                        "median_first_adoption_ms": median(first_adoption) if first_adoption else None,
                        "peak_gpu_allocated_bytes": max(
