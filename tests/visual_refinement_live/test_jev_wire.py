@@ -45,3 +45,12 @@ def test_distribution_mismatch_invalidates_only_affected_axis():
     assert value["axes"]["Q"]["status"] == "INVALID"
     assert value["axes"]["A"]["status"] == "VALID"
     assert value["axes"]["Q"]["score_decimal"] is None
+
+
+def test_valid_q_survives_unreported_usage_without_inventing_zero_cost():
+    raw = json.dumps({"model": "jev-1.13.0",
+                      "usage": {"input_tokens": None, "output_tokens": None},
+                      "answers": {"Q": _answer("Q")}}).encode()
+    value = validate_response(raw)
+    assert value["axes"]["Q"]["status"] == "VALID"
+    assert value["usage"] == {"input_tokens": None, "output_tokens": None}

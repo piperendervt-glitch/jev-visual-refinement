@@ -32,6 +32,26 @@ def load_dedicated_key(path: Path = KEY_PATH) -> str:
     return key
 
 
+def classify_transport_error(exc: Exception) -> str:
+    """Use the SDK's documented status and exception families without logging bodies."""
+    status = getattr(exc, "status", None)
+    cause = getattr(exc, "__cause__", None)
+    names = type(exc).__name__ + " " + (type(cause).__name__ if cause else "")
+    if "ResponseValidation" in names:
+        return "INVALID_RESPONSE"
+    if status in (401, 403):
+        return "AUTH"
+    if status in (429, 529):
+        return "RATE_LIMIT"
+    if isinstance(exc, TimeoutError) or "Timeout" in names:
+        return "TIMEOUT_UNKNOWN"
+    if isinstance(status, int) and status >= 500:
+        return "SERVER_ERROR"
+    if isinstance(exc, ConnectionError) or "Connection" in names:
+        return "CONNECTION_ERROR"
+    return "HTTP_ERROR"
+
+
 class SDKTransport:
     def __init__(self, key: str):
         self._key = key
@@ -146,18 +166,10 @@ class JevEvaluator:
                 try:
                     raw = self.transport.send(state, missing)
                 except Exception as exc:
-                    status_code = getattr(exc, "status", None)
-                    cause = getattr(exc, "__cause__", None)
-                    names = type(exc).__name__ + " " + (type(cause).__name__ if cause else "")
-                    timeout = isinstance(exc, TimeoutError) or "Timeout" in names
-                    connection = isinstance(exc, ConnectionError) or "Connection" in names
-                    category = ("AUTH" if status_code in (401, 403) else
-                                "RATE_LIMIT" if status_code in (429, 529) else
-                                "TIMEOUT_UNKNOWN" if timeout else
-                                "SERVER_ERROR" if isinstance(status_code, int) and status_code >= 500 else
-                                "CONNECTION_ERROR" if connection else
-                                "HTTP_ERROR")
-                    self.ledger.mark_attempt(attempt_id, "TIMEOUT_UNKNOWN" if timeout else "HTTP_ERROR")
+                    category = classify_transport_error(exc)
+                    self.ledger.mark_attempt(
+                        attempt_id, category if category in {"TIMEOUT_UNKNOWN", "INVALID_RESPONSE"}
+                        else "HTTP_ERROR")
                     self._transport_failure(task_id, attempt_id, frame_id, lane_id, category)
                     if category == "AUTH":
                         with self.lock:

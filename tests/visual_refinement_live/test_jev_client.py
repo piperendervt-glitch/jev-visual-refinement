@@ -4,7 +4,7 @@ import json
 import numpy as np
 
 from src.visual_refinement_live import store as live_store
-from src.visual_refinement_live.jev_client import JevEvaluator
+from src.visual_refinement_live.jev_client import JevEvaluator, classify_transport_error
 from src.visual_refinement_live.jev_wire import AXES, CRITERIA
 from src.visual_refinement_live.ledger import BudgetLedger
 from src.visual_refinement_live.measurement import measure_candidate
@@ -71,3 +71,19 @@ def test_real_transport_rejects_fixture_input_before_reservation(tmp_path, monke
         evaluator.close()
         ledger.close()
         store.close()
+
+
+def test_documented_sdk_failures_keep_invalid_response_and_auth_distinct():
+    class TypeSafeAPIResponseValidationError(Exception):
+        status = 200
+
+    class TypeSafeAuthenticationError(Exception):
+        status = 401
+
+    class TypeSafeRateLimitError(Exception):
+        status = 429
+
+    assert classify_transport_error(TypeSafeAPIResponseValidationError()) == "INVALID_RESPONSE"
+    assert classify_transport_error(TypeSafeAuthenticationError()) == "AUTH"
+    assert classify_transport_error(TypeSafeRateLimitError()) == "RATE_LIMIT"
+    assert classify_transport_error(TimeoutError()) == "TIMEOUT_UNKNOWN"

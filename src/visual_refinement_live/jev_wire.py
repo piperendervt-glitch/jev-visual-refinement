@@ -237,8 +237,13 @@ def validate_response(raw: bytes) -> dict:
                 axes[axis] = {"axis_id": axis, "status": "INVALID",
                               "score_decimal": None, "missing_reason": str(exc)}
     usage = data.get("usage")
-    if not isinstance(usage, dict) or not isinstance(usage.get("input_tokens"), int) or usage["input_tokens"] < 0:
+    if not isinstance(usage, dict):
         raise ValueError("response_usage_invalid")
-    return {"model": MODEL_ID, "axes": axes, "usage": {"input_tokens": usage["input_tokens"],
-                                                     "output_tokens": usage.get("output_tokens")},
+    for field in ("input_tokens", "output_tokens"):
+        value = usage.get(field)
+        if value is not None and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
+            raise ValueError("response_usage_invalid")
+    return {"model": MODEL_ID, "axes": axes,
+            "usage": {"input_tokens": usage.get("input_tokens"),
+                      "output_tokens": usage.get("output_tokens")},
             "raw_sha256": sha256(raw).hexdigest()}
