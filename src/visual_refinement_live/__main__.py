@@ -11,6 +11,7 @@ from .controller import LiveController
 from .jev_client import JevEvaluator, load_dedicated_key
 from .ledger import BudgetLedger
 from .ownership import WriterLease
+from .preflight import verify_runtime
 from .server import LiveServer
 from .store import RUNS_ROOT
 
@@ -45,6 +46,7 @@ def main(argv: list[str] | None = None) -> int:
     profile = _approved_video(args.video) if args.video else None
     if args.jev and (profile is None or not profile.get("jev_send_approved")):
         parser.error("Jev transmission requires the approved profile")
+    runtime = verify_runtime(LANE_PROFILES[args.profile], jev=args.jev) if args.video else None
     if args.jev:
         load_dedicated_key()
 
@@ -61,7 +63,8 @@ def main(argv: list[str] | None = None) -> int:
             video=args.video, run_id=args.run_id,
             lanes=LANE_PROFILES[args.profile], open_existing=args.open_existing,
             experiment={"profile": args.profile, "bucket": args.bucket,
-                        "jev": bool(args.jev), "origin": "REAL"} if args.video else None,
+                        "jev": bool(args.jev), "origin": "REAL",
+                        "runtime_preflight": runtime} if args.video else None,
             job_ledger=ledger, bucket=args.bucket)
         if args.jev:
             controller.evaluator = JevEvaluator(

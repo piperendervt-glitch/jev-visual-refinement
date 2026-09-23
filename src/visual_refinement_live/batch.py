@@ -4,6 +4,7 @@ from __future__ import annotations
 from dataclasses import asdict
 import json
 from pathlib import Path
+import shutil
 import sqlite3
 import threading
 import time
@@ -14,7 +15,8 @@ from . import controller as controller_module
 from .experiment import APPROVED_K_SECONDS, PROFILES, define_experiment, estimate
 from .jev_client import JevEvaluator, load_dedicated_key
 from .ledger import BudgetLedger, MAX_GPU_DURATION_MS
-from .segmenters import MODEL_SPEC, verify_weight, weight_path
+from .segmenters import MODEL_SPEC
+from .preflight import verify_runtime
 from .store import RUNS_ROOT, canonical
 
 MAX_BATCH_SECONDS = 4 * 60 * 60
@@ -128,13 +130,16 @@ class BatchManager:
 
     def _preflight(self, plan: dict) -> None:
         if self.origin == "REAL":
+            lanes = tuple(sorted({lane for p in plan["definition"]["profiles"]
+                                  for lane in PROFILES[p]}))
+            plan["runtime_preflight"] = verify_runtime(lanes, jev=True)
             load_dedicated_key()
-            for lane in sorted({lane for p in plan["definition"]["profiles"] for lane in PROFILES[p]}):
-                verify_weight(lane, weight_path(lane))
         # Only this owned run root is measured. The original video is never copied.
         used = sum(p.stat().st_size for p in RUNS_ROOT.rglob("*") if p.is_file())
         if used + plan["storage_reservation_bytes"] > MAX_STORAGE_BYTES:
             raise ValueError("batch_storage_capacity")
+        if shutil.disk_usage(RUNS_ROOT).free < plan["storage_reservation_bytes"]:
+            raise ValueError("batch_disk_free_insufficient")
 
     def start(self, *, profiles: tuple[str, ...], repeats: int,
               k_seconds: tuple[float, ...] = APPROVED_K_SECONDS,
@@ -189,6 +194,7 @@ class BatchManager:
                             "definition": definition, "profile": profile, "repeat": repeat,
                             "bucket": bucket, "plan_id": ident,
                             "weight_manifest": plan["weight_manifest"],
+                            "runtime_preflight": plan.get("runtime_preflight"),
                             "planned_k_seconds": definition["k_seconds"],
                             "jev": self.origin == "REAL", "origin": self.origin}
                     with self.lock:
